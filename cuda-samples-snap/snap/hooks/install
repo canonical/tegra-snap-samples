@@ -1,0 +1,5 @@
+#!/usr/bin/bash
+
+set -e
+
+cp -ar $SNAP/opt/cuda-samples -T  $SNAP_DATA/cuda-samples

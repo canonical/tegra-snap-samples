@@ -1,0 +1,7 @@
+#! /usr/bin/bash
+
+set -e
+
+# the tensorrt-samples need to write data, so copy
+# the whole directory to $SNAP_DATA
+cp -ar $SNAP/usr/src/tensorrt -T $SNAP_DATA/tensorrt

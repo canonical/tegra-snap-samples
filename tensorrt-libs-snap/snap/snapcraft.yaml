@@ -1,0 +1,46 @@
+name: tensorrt-libs # you probably want to 'snapcraft register <name>'
+base: core22 # the base snap is the execution environment for this snap
+version: '10.3.0.30-1+cuda12.5' # just for humans, typically '1.2+git' or '1.3.2'
+summary: TensorRT and cuda runtime libraries # 79 char long summary
+description: |
+  This snap contains the TensorRT runtime libraries contained in the deb
+  packages libnvinfer-bin and libnvinfer-samples from nvidia's repositories
+  as well as the cuda libraries contained in the cuda-12-6 package and its
+  dependencies.
+
+grade: devel # must be 'stable' to release into candidate/stable channels
+confinement: strict # use 'strict' once you have the right plugs and slots
+
+package-repositories:
+  - type: apt
+    components: [main]
+    suites: [r36.4]
+    key-id: 3C6D1FF3100C8C3ABB0869C0E6543461A9996195
+    key-server: https://repo.download.nvidia.com/jetson/jetson-ota-public.asc
+    url: https://repo.download.nvidia.com/jetson/t234
+    architectures: [arm64]
+  - type: apt
+    components: [main]
+    suites: [r36.4]
+    key-id: 3C6D1FF3100C8C3ABB0869C0E6543461A9996195
+    key-server: https://repo.download.nvidia.com/jetson/jetson-ota-public.asc
+    url: https://repo.download.nvidia.com/jetson/common
+    architectures: [arm64]
+
+parts:
+  tensorrt-libs:
+    plugin: nil
+    stage-packages:
+      - libnvinfer-bin
+      - libnvinfer-samples
+      - cuda-12-6
+
+  scripts:
+    plugin: dump
+    source: scripts
+
+slots:
+  tensorrt-libs-cuda-12:
+    interface: content
+    read:
+      - /

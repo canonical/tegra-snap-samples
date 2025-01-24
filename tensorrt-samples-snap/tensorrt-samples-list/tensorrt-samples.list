@@ -1,0 +1,12 @@
+sample_algorithm_selector
+sample_algorithm_selector_debug
+sample_char_rnn
+sample_char_rnn_debug
+sample_dynamic_reshape
+sample_dynamic_reshape_debug
+sample_io_formats
+sample_io_formats_debug
+sample_onnx_mnist
+sample_onnx_mnist_debug
+trtexec
+trtexec_debug
