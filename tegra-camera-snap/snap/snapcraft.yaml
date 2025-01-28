@@ -1,0 +1,91 @@
+name: tegra-camera
+summary: Sample camera apps for Tegra
+description: |
+  Collection of camera use-cases for Tegra platforms 
+version: '1.0'
+confinement: strict
+grade: stable
+
+base: core22
+
+package-repositories:
+  - type: apt
+    ppa: ubuntu-tegra/updates
+
+plugs:
+  hardware-observe:
+  camera:
+  media-control:
+  opengl:
+  network-bind:
+  kernel-module-observe:
+  tegra-camera-plug:
+    interface: custom-device
+    custom-device: tegra-camera
+
+slots:
+  tegra-camera-slot:
+    interface: custom-device
+    custom-device: tegra-camera
+    devices:
+      - /dev/capture-isp-channel[0-9]*
+      - /dev/capture-vi-channel[0-9]*
+      - /dev/tegra_camera_ctrl
+      - /dev/v4l2-nvenc
+      - /dev/v4l2-nvdec
+
+layout:
+  /usr/lib/aarch64-linux-gnu/nvidia:
+    bind: $SNAP/usr/lib/aarch64-linux-gnu/nvidia
+  /usr/lib/aarch64-linux-gnu/tegra-egl:
+    bind: $SNAP/usr/lib/aarch64-linux-gnu/tegra-egl
+  /usr/lib/aarch64-linux-gnu/libv4l:
+    bind: $SNAP/usr/lib/aarch64-linux-gnu/libv4l
+
+  /usr/share/egl/egl_external_platform.d:
+    symlink: $SNAP/usr/share/egl/egl_external_platform.d
+  /usr/share/glvnd/egl_vendor.d:
+    bind: $SNAP/usr/lib/aarch64-linux-gnu/tegra-egl
+
+  /etc/glvnd/egl_vendor.d:
+    bind: $SNAP/etc/glvnd/egl_vendor.d
+
+apps:
+  nvargus-nvraw:
+    command-chain: [bin/wrapper_local]
+    command: usr/sbin/nvargus_nvraw
+  v4l2-ctl:
+    command-chain: [bin/wrapper_local]
+    command: usr/bin/v4l2-ctl
+  gst-launch:
+    command-chain: [bin/wrapper_local]
+    command: usr/bin/gst-launch-1.0
+  nvargus-daemon:
+    command-chain: [bin/wrapper_local]
+    command: usr/sbin/nvargus-daemon
+    daemon: simple
+    restart-condition: on-failure
+
+parts:
+  camera:
+    plugin: nil
+    stage-packages:
+      - nvidia-tegra-drivers-36
+      - v4l-utils
+      - gstreamer1.0-tools
+      - gstreamer1.0-alsa
+      - gstreamer1.0-plugins-base
+      - gstreamer1.0-plugins-good
+      - gstreamer1.0-plugins-bad
+      - gstreamer1.0-plugins-ugly
+      - gstreamer1.0-libav
+      - libgstreamer1.0-dev
+      - libgstreamer-plugins-base1.0-dev
+      - libgstreamer-plugins-good1.0-dev
+      - libgstreamer-plugins-bad1.0-dev
+  launchers:
+    plugin: dump
+    source: launchers/
+    build-attributes: [no-patchelf]
+    organize:
+      '*': bin/

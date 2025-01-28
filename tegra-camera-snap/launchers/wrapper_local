@@ -1,0 +1,9 @@
+#!/bin/bash
+
+export PATH="$PATH:$SNAP/usr/bin:$SNAP/usr/sbin:$SNAP/sbin:/snap/bin"
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/snap/checkbox-ce-oem/current/usr/lib/aarch64-linux-gnu:/usr/lib/aarch64-linux-gnu/tegra-egl:/usr/lib/aarch64-linux-gnu/nvidia"
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$SNAP/usr/lib/aarch64-linux-gnu/pulseaudio:$SNAP/usr/lib/aarch64-linux-gnu/blas:$SNAP/usr/lib/aarch64-linux-gnu/lapack"
+export GST_PLUGIN_PATH=$SNAP/usr/lib/aarch64-linux-gnu/gstreamer-1.0/
+
+
+exec "$@"
