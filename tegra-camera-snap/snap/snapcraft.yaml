@@ -52,6 +52,12 @@ layout:
     bind: $SNAP/etc/glvnd/egl_vendor.d
 
 apps:
+  wget:
+    command-chain: [bin/wrapper_local]
+    command: usr/bin/wget
+  unzip:
+    command-chain: [bin/wrapper_local]
+    command: usr/bin/unzip
   nvargus-nvraw:
     command-chain: [bin/wrapper_local]
     command: usr/sbin/nvargus_nvraw
@@ -84,6 +90,8 @@ parts:
       - libgstreamer-plugins-base1.0-dev
       - libgstreamer-plugins-good1.0-dev
       - libgstreamer-plugins-bad1.0-dev
+      - unzip
+      - wget
   launchers:
     plugin: dump
     source: launchers/
