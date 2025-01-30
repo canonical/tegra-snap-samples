@@ -1,7 +1,7 @@
-name: tegra-camera
-summary: Sample camera apps for Tegra
+name: multimedia
+summary: Sample multimedia apps for Tegra
 description: |
-  Collection of camera use-cases for Tegra platforms 
+  Collection of multimedia use-cases for Tegra platforms
 version: '1.0'
 confinement: strict
 grade: stable
