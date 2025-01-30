@@ -1,0 +1,5 @@
+#!/usr/bin/bash
+
+set -e
+
+cp -ar $SNAP/usr/src/cudnn_samples_v9 -T  $SNAP_DATA/cudnn_samples_v9

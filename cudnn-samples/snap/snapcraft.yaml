@@ -1,0 +1,100 @@
+name: cudnn-samples
+summary: Sample cudnn snap for Tegra
+description: |
+  Collection of cudnn use-cases for Tegra platforms 
+version: '1.0'
+confinement: strict
+grade: stable
+
+base: core22
+
+package-repositories:
+  - type: apt
+    components: [main]
+    suites: [r36.4]
+    key-id: 3C6D1FF3100C8C3ABB0869C0E6543461A9996195
+    key-server: https://repo.download.nvidia.com/jetson/jetson-ota-public.asc
+    url: https://repo.download.nvidia.com/jetson/t234
+    architectures: [arm64]
+  - type: apt
+    components: [main]
+    suites: [r36.4]
+    key-id: 3C6D1FF3100C8C3ABB0869C0E6543461A9996195
+    key-server: https://repo.download.nvidia.com/jetson/jetson-ota-public.asc
+    url: https://repo.download.nvidia.com/jetson/common
+    architectures: [arm64]
+  - type: apt
+    ppa: ubuntu-tegra/updates
+
+plugs:
+  tensorrt-libs-cuda-12:
+    interface: content
+    target: $SNAP/tensorrt-libs
+  opengl:
+  hardware-observe:
+
+apps:
+  conv-sample:
+    command-chain: [bin/tensorrt-libs-wrapper, bin/wrapper_local]
+    command: bin/execute_from_target_dir.sh run_conv_sample.sh
+  mnist-cudnn-sample:
+    command-chain: [bin/tensorrt-libs-wrapper, bin/wrapper_local]
+    command: bin/execute_from_target_dir.sh mnistCUDNN
+  rnn-sample:
+    command-chain: [bin/tensorrt-libs-wrapper, bin/wrapper_local]
+    command: bin/execute_from_target_dir.sh RNN
+  multi-head-attention-sample:
+    command-chain: [bin/tensorrt-libs-wrapper, bin/wrapper_local]
+    command: bin/execute_from_target_dir.sh run_ref.sh
+
+parts:
+  autograd:
+    plugin: python
+    source: .
+    python-packages:
+      - autograd
+  cudnn-samples:
+    plugin: nil
+    stage-packages:
+      - nvidia-tegra-drivers-36
+      - cudnn
+      - libcudnn9-samples
+      - libfreeimage3
+    build-packages:
+      - cudnn
+      - cuda
+      - libcudnn9-samples
+      - libfreeimage-dev
+      - make
+    override-build: |
+      set -x 
+      cd $CRAFT_PART_INSTALL/usr/src/cudnn_samples_v9/conv_sample
+      make -j8
+
+      chmod +x run_conv_sample.sh
+      mkdir -p $CRAFT_PART_INSTALL/usr/bin
+
+      cd $CRAFT_PART_INSTALL/usr/src/cudnn_samples_v9/mnistCUDNN
+      make -j8
+      chmod +x ./mnistCUDNN
+
+      cd $CRAFT_PART_INSTALL/usr/src/cudnn_samples_v9/RNN_v8.0
+      make -j8
+
+      cd $CRAFT_PART_INSTALL/usr/src/cudnn_samples_v9/multiHeadAttention/
+      make -j8
+      sed -i 's#./attn_ref.py#python3 ./attn_ref.py#g' run_ref.sh
+      sed -i 's#np\.shape(w)\[0\] / nheads#int(np\.shape(w)\[0\] / nheads)#g' attn_ref.py
+
+      cd $CRAFT_PART_INSTALL/usr/src/
+      for f in $(find ./cudnn_samples_v9 -executable -type f); 
+      do 
+        ln -sf /var/snap/cudnn-samples/current/$f $CRAFT_PART_INSTALL/usr/bin/$(basename $f); 
+      done
+
+  launchers:
+    plugin: dump
+    source: launchers/
+    build-attributes: [no-patchelf]
+    organize:
+      '*': bin/

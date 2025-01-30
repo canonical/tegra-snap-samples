@@ -1,0 +1,3 @@
+#!/bin/sh
+
+exec "${SNAP}/tensorrt-libs/bin/tensorrt-libs-provider-wrapper" "$@"
