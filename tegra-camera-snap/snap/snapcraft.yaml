@@ -19,6 +19,7 @@ plugs:
   opengl:
   network-bind:
   kernel-module-observe:
+  process-control:
   tegra-camera-plug:
     interface: custom-device
     custom-device: tegra-camera
