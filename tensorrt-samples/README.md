@@ -9,11 +9,11 @@ cuda toolkit and runtime libraries, `nvidia-tegra-drivers-36` and
 additional libraries and its dependencies.
 
 In order for this snap to work, we need the same interfaces as the
-[cuda-samples snap](https://github.com/canonical/cuda-samples-snap/). The
+[cuda-samples snap](../cuda-samples/). The
 graphics-core22 interface should be provided by the [nvidia-tegra-runtime
-snap](https://github.com/canonical/nvidia-tegra-runtime-snap/). The
+snap](../nvidia-tegra-runtime/). The
 tensorrt-libs-cuda-12 interface will be provided by the [tensorrt-libs
-snap](https://github.com/canonical/tensorrt-libs-snap/) and contains the
+snap](../tensorrt-libs/) and contains the
 necessary cuda and tensorrt runtime libraries.
 
 The `$LD_LIBRARY_PATH` variable will be properly set up using the wrapper
@@ -26,13 +26,13 @@ require write permissions in the directory they are being executed from, so we
 include an install hook that copies the whole directory into `$SNAP_DATA`. The
 samples are then executed using a wrapper script that takes the name of a
 sample as an argument, directly from the `$SNAP_DATA` directory. A list of
-samples can be found in [tensorrt\_samples.txt](cuda_samples.txt).
+samples can be found in [tensorrt\_samples.txt](tensorrt_samples.txt).
 
 # Build, Install and Run Samples
 In order for the snap to work, you must first install the
 [nvidia-tegra-runtime
-snap](https://github.com/canonical/nvidia-tegra-drivers-36-snap) and the
-[tensorrt-libs snap](https://github.com/canonical/tensorrt-libs-snap/).
+snap](../nvidia-tegra-runtime/) and the
+[tensorrt-libs snap](../tensorrt-libs/).
 Afterwards, build this snap by calling `snapcraft` from the root directory and
 install it using the `--dangerous` flag. Then connect the interfaces:
 
