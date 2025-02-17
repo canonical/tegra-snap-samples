@@ -26,7 +26,7 @@ require write permissions in the directory they are being executed from, so we
 include an install hook that copies the whole directory into `$SNAP_DATA`. The
 samples are then executed using a wrapper script that takes the name of a
 sample as an argument, directly from the `$SNAP_DATA` directory. A list of
-samples can be found in [tensorrt\_samples.txt](tensorrt_samples.txt).
+samples can be found in [tensorrt\_samples.txt](tensorrt-samples-list/tensorrt-samples.list).
 
 # Build, Install and Run Samples
 In order for the snap to work, you must first install the
