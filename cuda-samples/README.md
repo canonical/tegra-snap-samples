@@ -5,10 +5,10 @@ repository](https://github.com/NVIDIA/cuda-samples/)
 
 It depends on the cuda toolkit for compilation and the tensorrt-libs-cuda-12
 content interface from the [tensorrt-libs
-snap](https://github.com/canonical/tensorrt-libs-snap/) to access the cuda and
+snap](../tensorrt-libs/) to access the cuda and
 tensorrt runtime libraries. It is also dependent on the graphics-core22
 interface from the [nvidia-tegra-runtime
-snap](https://github.com/canonical/nvidia-tegra-runtime-snap).
+snap](../nvidia-tegra-runtime/).
 
 The graphics-core22 interface for now only provides access to several runtime
 libraries necessary to communicate with the GPU but not other graphics
@@ -36,8 +36,8 @@ executing the specified sample.
 # Build, Install and Run Samples
 In order for the snap to work, you must first install the
 [nvidia-tegra-runtime
-snap](https://github.com/canonical/nvidia-tegra-runtime-snap) and the
-[tensorrt-libs snap](https://github.com/canonical/tensorrt-libs-snap/).
+snap](../nvidia-tegra-runtime/) and the
+[tensorrt-libs snap](../tensorrt-libs/).
 Afterwards, build this snap by calling `snapcraft` from the root directory and
 install it using the `--dangerous` flag. Then connect the interfaces:
 
