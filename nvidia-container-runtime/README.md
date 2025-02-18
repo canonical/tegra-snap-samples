@@ -64,3 +64,10 @@ We can then run a container like this:
 $ sudo docker run --runtime=nvidia --gpus all --rm -v $(pwd):/sh_input \
     nvcr.io/nvidia/tensorrt:24.11-py3-igpu bash /sh_input/run_tensorrt.sh
 ```
+
+Note that on boot, the GPU is deactivated by default and will only activate once a GPU workload is run. Therefore, passing the CDI spec to the container runtime might fail if it specifies non-existent device nodes.
+
+This can be circumvented by running `nvidia-smi` for example. This is exposed as an app in the [nvidia-tegra-runtime snap](../nvidia-tegra-runtime) which needs to be installed as a prerequisit. It can then be run like this:
+```
+$ sudo snap run nvidia-tegra-runtime.nvidia-smi
+```
