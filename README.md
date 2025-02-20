@@ -2,8 +2,8 @@
 
 This repository contains several different sample snap definitions that can be used to build different application snaps to run GPU workloads on Nvidia Tegra platforms.
 
-Each snap sample contains another README file going into more detail on what the sample contains and how it can be built and run.
-In general, each sample can be built by simply navigating to its directory and executing `snapcraft`. For example:
+Each sample snap directory contains another README file going into further detail on what the snap contains and how it can be built and run.
+In general, each snap can be built by simply navigating to its directory and executing `snapcraft`. For example:
 ```
 cd nvidia-tegra-runtime
 snapcraft -v
