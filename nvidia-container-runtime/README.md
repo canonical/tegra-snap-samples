@@ -1,12 +1,12 @@
 # Nvidia Container Runtime
 
-This directory contains supporting files needed in order to enable the nvidia container runtime for docker on Ubuntu Core.
+This directory contains supporting files required by the nvidia container runtime for docker on Ubuntu Core.
 
-In order to run docker containers using the nvidia container runtime, we need to install the docker snap on Ubuntu Core. This snap already exists so we don't have to build it manually.
+Before running docker containers using the nvidia container runtime, we need to install the docker snap on Ubuntu Core. This snap already exists so we don't have to build it manually.
 
 In order to use the docker snap, we need to pass runtime libraries and device nodes in the form of a "Container Device Interface" (CDI) specification whereas on a classic Ubuntu image we can use the CSV format.
 
-In order to generate the CDI specification, we can adapt the CSV files that are shipped with the nvidia-tegra-drivers-36 .deb package from the [ubuntu-tegra/updates ppa](https://launchpad.net/~ubuntu-tegra/+archive/ubuntu/updates/+packages). The modification is done by simply changing the path of the files listed in `drivers.csv` to the path where it will be found inside the docker snap. The modified CSV files are contained in this directory. The CDI specification can then be generated from within the docker snap. The docker snap will only find the necessary runtime libraries to pass to the container runtime, when it is connected to the `graphics-core22` interface of the [nvidia-tegra-runtime snap](../nvidia-tegra-runtime) which needs to be built and installed before.
+We can generate the CDI specification by adapting the CSV files that are shipped with the nvidia-tegra-drivers-36 .deb package from the [ubuntu-tegra/updates ppa](https://launchpad.net/~ubuntu-tegra/+archive/ubuntu/updates/+packages). The modification is done by simply changing the path of the files listed in `drivers.csv` to the path where it will be found inside the docker snap. The modified CSV files are contained in this directory. The CDI specification can then be generated from within the docker snap. The docker snap will only find the necessary runtime libraries to pass to the container runtime, when it is connected to the `graphics-core22` interface of the [nvidia-tegra-runtime snap](../nvidia-tegra-runtime) which needs to be built and installed before.
 
 Install the docker snap and connect it to the `graphics-core22` interface:
 ```
