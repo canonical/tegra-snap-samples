@@ -73,7 +73,13 @@ parts:
       ldconfig
       mkdir -p $CRAFT_PART_INSTALL/usr/bin
       mkdir -p $CRAFT_PART_INSTALL/opt/cuda-samples
-      make -j4 -C $CRAFT_PART_BUILD/ && cp -ar $CRAFT_PART_BUILD/Samples $CRAFT_PART_BUILD/Common $CRAFT_PART_INSTALL/opt/cuda-samples && (cd $CRAFT_PART_INSTALL/opt && for f in $(find ./cuda-samples/Samples -executable -type f | grep -v "\.[A-Za-z]*$"); do ln -sf /var/snap/cuda-samples/current/$f $CRAFT_PART_INSTALL/usr/bin/$(basename $f); done)
+      make -j4 -C $CRAFT_PART_BUILD/
+      cp -ar $CRAFT_PART_BUILD/Samples $CRAFT_PART_BUILD/Common $CRAFT_PART_INSTALL/opt/cuda-samples
+      cd $CRAFT_PART_INSTALL/opt
+      for f in $(find ./cuda-samples/Samples -executable -type f | grep -v "\.[A-Za-z]*$")
+      do
+        ln -sf /var/snap/cuda-samples/current/$f $CRAFT_PART_INSTALL/usr/bin/$(basename $f)
+      done
 
   cuda-samples-list:
     plugin: dump
