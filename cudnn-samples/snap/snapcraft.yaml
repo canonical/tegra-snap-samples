@@ -56,7 +56,7 @@ parts:
   cudnn-samples:
     plugin: nil
     stage-packages:
-      - nvidia-tegra-drivers-36
+      - nvidia-l4t-cuda
       - cudnn
       - libcudnn9-samples
       - libfreeimage3
