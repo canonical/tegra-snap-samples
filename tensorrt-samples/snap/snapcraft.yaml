@@ -51,7 +51,7 @@ parts:
     build-packages:
       - initramfs-tools
       - cuda-12-6
-      - nvidia-tegra-drivers-36
+      - nvidia-l4t-dla-compiler
         #- libnvinfer-bin
       - libnvinfer-samples
     stage-packages:
