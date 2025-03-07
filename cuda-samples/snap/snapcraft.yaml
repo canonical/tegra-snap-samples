@@ -59,7 +59,7 @@ parts:
     plugin: nil
     build-packages:
       - initramfs-tools
-      - nvidia-tegra-drivers-36
+      - nvidia-l4t-cuda
       - cuda-12-6
       - cmake
     stage-packages:
