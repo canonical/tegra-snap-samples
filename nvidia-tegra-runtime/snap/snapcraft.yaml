@@ -27,7 +27,10 @@ parts:
     plugin: nil
     source: .
     stage-packages:
-      - nvidia-tegra-drivers-36
+      - nvidia-l4t-nvml
+      - nvidia-l4t-cuda
+      - nvidia-l4t-dla-compiler
+      - nvidia-l4t-graphics-demos
 
   scripts:
     plugin: dump
