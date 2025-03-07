@@ -92,6 +92,7 @@ parts:
       - nvidia-l4t-camera
       - nvidia-l4t-gstreamer
       - nvidia-l4t-3d-core
+      - nvidia-l4t-multimedia
       - v4l-utils
       - gstreamer1.0-tools
       - gstreamer1.0-alsa
