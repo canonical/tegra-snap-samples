@@ -18,8 +18,20 @@ apps:
       - opengl
 
 package-repositories:
- - type: apt
-   ppa: ubuntu-tegra/updates
+  - type: apt
+    components: [main]
+    suites: [r36.4]
+    key-id: 3C6D1FF3100C8C3ABB0869C0E6543461A9996195
+    key-server: https://repo.download.nvidia.com/jetson/jetson-ota-public.asc
+    url: https://repo.download.nvidia.com/jetson/t234
+    architectures: [arm64]
+  - type: apt
+    components: [main]
+    suites: [r36.4]
+    key-id: 3C6D1FF3100C8C3ABB0869C0E6543461A9996195
+    key-server: https://repo.download.nvidia.com/jetson/jetson-ota-public.asc
+    url: https://repo.download.nvidia.com/jetson/common
+    architectures: [arm64]
 
 parts:
   nvidia-tegra-runtime:

@@ -23,8 +23,6 @@ package-repositories:
     key-server: https://repo.download.nvidia.com/jetson/jetson-ota-public.asc
     url: https://repo.download.nvidia.com/jetson/common
     architectures: [arm64]
-  - type: apt
-    ppa: ubuntu-tegra/updates
 
 plugs:
   tensorrt-libs-cuda-12:
