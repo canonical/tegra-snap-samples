@@ -33,7 +33,7 @@ $ sudo snap restart multimedia.nvargus-daemon
 
 # List video devices
 ```
-$ sudo snap run tegra-camera.v4l2-ctl --list-devices
+$ sudo snap run multimedia.v4l2-ctl --list-devices
 ```
 
 # Print sensor information with nvargus
