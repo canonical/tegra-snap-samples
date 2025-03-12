@@ -1,6 +1,6 @@
 # nvidia-tegra-runtime
 
-This snap provides L4T packages from the [Nvidia's archive](https://repo.download.nvidia.com/jetson) which
+This snap provides L4T packages from the [Nvidia package repository](https://repo.download.nvidia.com/jetson) which
 contain the firmware and core files for Nvidia tegra GPUs in order to run the
 CUDA toolkit.
 
