@@ -4,7 +4,7 @@ This snap packages several camera and gstreamer utilities that can be used to ac
 
 In order to run this software successfully, we need to make use of several built-in plugins related to camera, network, graphics, multimedia and hardware. Additionally, we need access to some device nodes that are not yet included in any existing interface. In order to access a device node, it needs to be tagged by the snap using a udev rules, otherwise it will not be visible inside the snap environment. For this, we can use the `custom-device` interface. The slot side of this interface can either be part of a gadget snap, or part of the application snap itself (which is the case here). After we create the slot definition with a name for the slot (tegra-camera), we can create a plug definition that specifies we want to plug into the custom-device interface with the name "tegra-camera".
 
-This snap doesn't require any extra build steps for the software it contains, it simply uses staging packages. We need `nvidia-tegra-drivers-36` to provide some platform specific runtime libraries. Additionally, we need multiple gstreamer packages that provide development files and plugins for gstreamer to communicate with the hardware. We use v4l-utils as a generic tool to interface with the cameras. Finally, we also include `unzip` and `wget` since there are no official snaps containing these tools and we want to use them later to be able to download a video file and unpack it for transcoding purposes.
+This snap doesn't require any extra build steps for the software it contains, it simply uses staging packages. We need L4T packages to provide some platform specific runtime libraries. Additionally, we need multiple gstreamer packages that provide development files and plugins for gstreamer to communicate with the hardware. We use v4l-utils as a generic tool to interface with the cameras. Finally, we also include `unzip` and `wget` since there are no official snaps containing these tools and we want to use them later to be able to download a video file and unpack it for transcoding purposes.
 
 We need to create several different `layouts` in the snap which will bind-mount a directory from inside the snap to a different location in the execution environment. This is necessary because some tools expect certain libraries and configuration files in hard-coded paths. By default however, all files included in the snap will be found under `/snap/multimedida/current`.
 
@@ -33,7 +33,7 @@ $ sudo snap restart multimedia.nvargus-daemon
 
 # List video devices
 ```
-$ sudo snap run tegra-camera.v4l2-ctl --list-devices
+$ sudo snap run multimedia.v4l2-ctl --list-devices
 ```
 
 # Print sensor information with nvargus
