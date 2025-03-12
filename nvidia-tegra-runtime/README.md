@@ -1,8 +1,11 @@
 # nvidia-tegra-runtime
 
-This snap provides L4T packages from the [Nvidia package repository](https://repo.download.nvidia.com/jetson) which
-contain the firmware and core files for Nvidia tegra GPUs in order to run the
-CUDA toolkit.
+This snap provides L4T packages such as `nvidia-l4t-nvml`, `nvidia-l4t-cuda`,
+`nvidia-l4t-dla-compiler`, and `nvidia-l4t-graphics-demos`
+from the [Nvidia package repository](https://repo.download.nvidia.com/jetson)
+which contain runtime libraries for the Nvidia tegra platforms in order to run the
+CUDA toolkit, this snap does not include the `nvidia-tegra-drivers-36` package
+anymore.
 
 It includes the `nvidia-smi` tool to query information about the GPU. In order
 to function, the tool needs access to the firmware files which should be
