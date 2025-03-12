@@ -13,7 +13,7 @@ The snaps should be built on an arm64 host as this is the architecture of the Te
 
 # [nvidia-tegra-runtime](nvidia-tegra-runtime)
 
-Tegra runtime and cuda support libraries contained in the nvidia-tegra-drivers-36 package from the [ubuntu-tegra/updates ppa](https://launchpad.net/~ubuntu-tegra/+archive/ubuntu/updates)
+Tegra runtime and cuda support libraries provided by the L4T packages from the [Nvidia’s archive](https://repo.download.nvidia.com/jetson).
 
 # [tensorrt-libs](tensorrt-libs)
 

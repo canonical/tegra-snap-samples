@@ -4,7 +4,7 @@ This snap packages software coming from Nvidia's TensorRT samples, contained in
 the `libnvinfer-samples` .deb package.
 
 For compilation, we need to include the packages `cuda-12-6` which contains the
-cuda toolkit and runtime libraries, `nvidia-tegra-drivers-36` and
+cuda toolkit and runtime libraries, `libnvdla_compiler` and
 `libnvinfer-samples` which contains the samples themselves as well as
 additional libraries and its dependencies.
 
@@ -40,7 +40,7 @@ install it using the `--dangerous` flag. Then connect the interfaces:
 $ snapcraft
 $ sudo snap install --dangerous tensorrt-samples_10.3.0.30-1+cuda12.5_arm64.snap
 
-$ sudo snap connect tensorrt-samples:graphics-core22 nvidia-tegra-drivers-36:graphics-core22
+$ sudo snap connect tensorrt-samples:graphics-core22 nvidia-tegra-runtime:graphics-core22
 $ sudo snap connect tensorrt-samples:tensorrt-libs-cuda-12 tensorrt-libs:tensorrt-libs-cuda-12
 $ sudo snap connect tensorrt-samples:hardware-observe
 ```

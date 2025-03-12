@@ -1,9 +1,7 @@
 # nvidia-tegra-runtime
 
-This snap packages the nvidia-tegra-drivers-36 .deb package from the
-[ubuntu-tegra/updates
-ppa](https://launchpad.net/~ubuntu-tegra/+archive/ubuntu/updates) which
-contains the firmware and core files for nvidia tegra GPUs in order to run the
+This snap provides L4T packages from the [Nvidia's archive](https://repo.download.nvidia.com/jetson) which
+contain the firmware and core files for Nvidia tegra GPUs in order to run the
 CUDA toolkit.
 
 It includes the `nvidia-smi` tool to query information about the GPU. In order

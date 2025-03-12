@@ -2,7 +2,7 @@
 
 This snap packages software coming from the `libcudnn9-samples` .deb package from [nvidia's software repository](https://repo.download.nvidia.com/jetson/).
 
-For compilation, we need cuda and cudnn libraries. We stage `nvidia-tegra-drivers-36` directly as a package and implement the `tensorrt-libs-cuda-12` content interface provided by the [tensorrt-libs snap](../tensorrt-libs/) for the necessary cuda and tensorrt runtime libraries. We also need to plug into the hardware-observe and opengl interfaces for the necessary hardware access.
+For compilation, we need cuda and cudnn libraries. We stage the `nvidia-l4t-cuda` L4T package directly and implement the `tensorrt-libs-cuda-12` content interface provided by the [tensorrt-libs snap](../tensorrt-libs/) for the necessary cuda and tensorrt runtime libraries. We also need to plug into the hardware-observe and opengl interfaces for the necessary hardware access.
 
 In this snap, we package the 4 cuDNN samples `conv_sample`, `mnistCUDNN`, `RNN_v8.0` and multiHeadAttention. The samples are built by navigating to the respective directories in `$CRAFT_PART_INSTALL/usr/src/cudnn_samples_v9` and running `make`. In the `multiHeadAttention` sample, we need to make some additional changes to the sources in order to execute the samples correctly.
 
