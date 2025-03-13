@@ -1,0 +1,84 @@
+name: nvpmodel
+summary: Sample nvpmodel apps for Tegra
+description: |
+  Collection of nvpmodel use-cases for Tegra platforms
+version: '1.0'
+confinement: strict
+grade: stable
+
+base: core22
+
+package-repositories:
+  - type: apt
+    components: [main]
+    suites: [r36.4]
+    key-id: 3C6D1FF3100C8C3ABB0869C0E6543461A9996195
+    key-server: https://repo.download.nvidia.com/jetson/jetson-ota-public.asc
+    url: https://repo.download.nvidia.com/jetson/t234
+    architectures: [arm64]
+  - type: apt
+    components: [main]
+    suites: [r36.4]
+    key-id: 3C6D1FF3100C8C3ABB0869C0E6543461A9996195
+    key-server: https://repo.download.nvidia.com/jetson/jetson-ota-public.asc
+    url: https://repo.download.nvidia.com/jetson/common
+    architectures: [arm64]
+
+plugs:
+  hardware-observe:
+  set-power-management-mode:
+    interface: system-files
+    write:
+      - /sys/devices/system/cpu/cpu0/online
+      - /sys/devices/system/cpu/cpu1/online
+      - /sys/devices/system/cpu/cpu2/online
+      - /sys/devices/system/cpu/cpu3/online
+      - /sys/devices/system/cpu/cpu4/online
+      - /sys/devices/system/cpu/cpu5/online
+      - /sys/devices/platform/gpu.0/fbp_pg_mask
+      - /sys/devices/platform/gpu.0/tpc_pg_mask
+      - /sys/devices/platform/gpu.0/power/control
+      - /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+      - /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
+      - /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+      - /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
+      - /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
+      - /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
+      - /sys/devices/platform/bus@0/17000000.gpu/power/control
+      - /sys/devices/platform/bus@0/17000000.gpu/tpc_pg_mask
+      - /sys/devices/platform/17000000.gpu/devfreq_dev/max_freq
+      - /sys/devices/platform/17000000.gpu/devfreq_dev/available_frequencies
+      - /sys/kernel/nvpmodel_clk_cap/emc
+
+layout:
+  /usr/bin/whoami:
+    bind-file: $SNAP/usr/bin/whoami
+  /etc/nvpmodel.conf:
+    bind-file: $SNAP_DATA/etc/nvpmodel.conf
+  /var/lib/nvpmodel:
+    bind: $SNAP_DATA/var/lib/nvpmodel
+
+apps:
+  nvpmodel:
+    command-chain: [bin/wrapper_local]
+    command: usr/sbin/nvpmodel
+    plugs:
+      - set-power-management-mode
+  jetson-clocks:
+    command-chain: [bin/wrapper_local]
+    command: usr/bin/jetson_clocks
+
+parts:
+  nvpmodel:
+    plugin: nil
+    stage-packages:
+      - nvidia-l4t-nvpmodel
+      - nvidia-l4t-core
+      - nvidia-l4t-tools
+      - bc
+  launchers:
+    plugin: dump
+    source: launchers/
+    build-attributes: [no-patchelf]
+    organize:
+      '*': bin/
