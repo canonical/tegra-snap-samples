@@ -35,19 +35,18 @@ plugs:
       - /sys/devices/system/cpu/cpu3/online
       - /sys/devices/system/cpu/cpu4/online
       - /sys/devices/system/cpu/cpu5/online
-      - /sys/devices/platform/gpu.0/fbp_pg_mask
-      - /sys/devices/platform/gpu.0/tpc_pg_mask
-      - /sys/devices/platform/gpu.0/power/control
-      - /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-      - /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
-      - /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-      - /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
       - /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
       - /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
-      - /sys/devices/platform/bus@0/17000000.gpu/power/control
+      - /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
+      - /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
       - /sys/devices/platform/bus@0/17000000.gpu/tpc_pg_mask
-      - /sys/devices/platform/17000000.gpu/devfreq_dev/max_freq
+      - /sys/devices/platform/bus@0/17000000.gpu/fbp_pg_mask
+      - /sys/devices/platform/bus@0/17000000.gpu/power/control
+      - /sys/devices/platform/bus@0/17000000.gpu/devfreq/17000000.gpu/max_freq
+      - /sys/devices/platform/bus@0/17000000.gpu/devfreq/17000000.gpu/min_freq
       - /sys/devices/platform/17000000.gpu/devfreq_dev/available_frequencies
+      - /sys/devices/platform/17000000.gpu/devfreq_dev/min_freq
+      - /sys/devices/platform/17000000.gpu/devfreq_dev/max_freq
       - /sys/kernel/nvpmodel_clk_cap/emc
 
 layout:
