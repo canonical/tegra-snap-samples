@@ -50,8 +50,6 @@ plugs:
       - /sys/kernel/nvpmodel_clk_cap/emc
 
 layout:
-  /usr/bin/whoami:
-    bind-file: $SNAP/usr/bin/whoami
   /etc/nvpmodel.conf:
     bind-file: $SNAP_DATA/etc/nvpmodel.conf
   /var/lib/nvpmodel:
@@ -74,6 +72,7 @@ parts:
       - nvidia-l4t-nvpmodel
       - nvidia-l4t-core
       - nvidia-l4t-tools
+      - coreutils
       - bc
   launchers:
     plugin: dump
