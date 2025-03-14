@@ -47,7 +47,12 @@ plugs:
       - /sys/devices/platform/17000000.gpu/devfreq_dev/available_frequencies
       - /sys/devices/platform/17000000.gpu/devfreq_dev/min_freq
       - /sys/devices/platform/17000000.gpu/devfreq_dev/max_freq
+      - /sys/class/devfreq/17000000.gpu/device/of_node/compatible
+      - /sys/devices/platform/bus@0/17000000.gpu/railgate_enable
       - /sys/kernel/nvpmodel_clk_cap/emc
+      - /sys/kernel/debug/bpmp/debug/clk/emc/min_rate
+      - /sys/kernel/debug/bpmp/debug/clk/emc/rate
+      - /sys/kernel/debug/bpmp/debug/clk/emc/mrq_rate_locked
 
 layout:
   /etc/nvpmodel.conf:
@@ -61,9 +66,11 @@ apps:
     command: usr/sbin/nvpmodel
     plugs:
       - set-power-management-mode
-  jetson-clocks:
+  jetson-clocks-show:
     command-chain: [bin/wrapper_local]
-    command: usr/bin/jetson_clocks
+    command: usr/bin/jetson_clocks --show
+    plugs:
+      - set-power-management-mode
 
 parts:
   nvpmodel:
