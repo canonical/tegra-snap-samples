@@ -1,0 +1,191 @@
+name: vpi-samples
+base: core22
+version: 3.2.4-1
+summary: NVIDIA VPI samples
+description: |
+  This snap contains the VPI samples.
+
+grade: stable
+confinement: strict
+
+plugs:
+  hardware-observe:
+  opengl:
+  graphics-core22:
+    interface: content
+    target: $SNAP/graphics
+    default-provider: mesa-core22 ## note: expecting the nvidia-tegra-runtime
+  vpi3-core22:
+    interface: content
+    target: $SNAP/vpi
+
+package-repositories:
+  - type: apt
+    components: [main]
+    suites: [r36.4]
+    key-id: 3C6D1FF3100C8C3ABB0869C0E6543461A9996195
+    key-server: https://repo.download.nvidia.com/jetson/jetson-ota-public.asc
+    url: https://repo.download.nvidia.com/jetson/t234
+    architectures: [arm64]
+  - type: apt
+    components: [main]
+    suites: [r36.4]
+    key-id: 3C6D1FF3100C8C3ABB0869C0E6543461A9996195
+    key-server: https://repo.download.nvidia.com/jetson/jetson-ota-public.asc
+    url: https://repo.download.nvidia.com/jetson/common
+    architectures: [arm64]
+  - type: apt
+    ppa: ubuntu-tegra/updates
+
+parts:
+  vpi-samples:
+    plugin: nil
+    build-packages:
+      - nvidia-l4t-core
+      - nvidia-l4t-3d-core
+      - nvidia-l4t-multimedia
+      - nvidia-l4t-pva
+      - nvidia-vpi
+      - libnvvpi3
+      - python3.10-vpi3
+      - vpi3-samples
+      - vpi3-dev
+      - libopencv-dev
+      - libopencv
+      - cmake
+      - python3-numpy
+      - python3-pil
+      - libopencv-python
+      - libicu70
+      - libegl1
+    stage-packages:
+      - vpi3-samples
+      - libopencv-python
+      - python3.10-vpi3
+      - python3-numpy
+      - python3-pil
+    override-build: |
+      export LD_LIBRARY_PATH=${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/usr/lib/aarch64-linux-gnu/tegra-egl/
+      cd $CRAFT_PART_INSTALL/opt/nvidia/vpi3/samples/
+      for f in */CMakeLists.txt ; do pushd $(dirname $f) ; cmake -DOpenCV_DIR=/usr/lib/cmake/opencv4 . ; VERBOSE=1 make ; popd ; done
+      for f in */CMakeLists.txt ; do pushd $(dirname $f) ; rm -fr CMakeFiles ; popd ; done
+    override-prime: |
+      craftctl default
+      rm -fr $CRAFT_PRIME/usr/share/icons
+  graphics-core22:
+    after: [vpi-samples]
+    source: https://github.com/canonical/gpu-snap.git
+    plugin: dump
+    override-prime: |
+      craftctl default
+      for filelist in /var/lib/dpkg/info/nvidia-*.list ; do for f in $(cat $filelist | awk "/.+/ { print  \"${CRAFT_PRIME}/\" \$0 }") ; do test -f $f && rm $f ; done ; done
+      rm -fr ${CRAFT_PRIME}/lib/firmware
+      ${CRAFT_PART_SRC}/bin/graphics-core22-cleanup mesa-core22 nvidia-core22
+    prime:
+    - bin/graphics-core22-wrapper
+  vpi-wrapper:
+    after: [vpi-samples]
+    source: .
+    plugin: dump
+    organize:
+      '*': bin/
+    prime:
+    - bin/vpi-wrapper
+
+apps:
+  vpi-sample-01-convolve-2d:
+    command-chain:
+      - bin/graphics-core22-wrapper
+      - bin/vpi-wrapper
+    command: /opt/nvidia/vpi3/samples/01-convolve_2d/vpi_sample_01_convolve_2d
+  vpi-sample-02-stereo-disparity:
+    command-chain:
+      - bin/graphics-core22-wrapper
+      - bin/vpi-wrapper
+    command: /opt/nvidia/vpi3/samples/02-stereo_disparity/vpi_sample_02_stereo_disparity
+  vpi-sample-03-harris-corners:
+    command-chain:
+      - bin/graphics-core22-wrapper
+      - bin/vpi-wrapper
+    command: /opt/nvidia/vpi3/samples/03-harris_corners/vpi_sample_03_harris_corners
+  vpi-sample-04-rescale:
+    command-chain:
+      - bin/graphics-core22-wrapper
+      - bin/vpi-wrapper
+    command: /opt/nvidia/vpi3/samples/04-rescale/vpi_sample_04_rescale
+  vpi-sample-05-benchmark:
+    command-chain:
+      - bin/graphics-core22-wrapper
+      - bin/vpi-wrapper
+    command: /opt/nvidia/vpi3/samples/05-benchmark/vpi_sample_05_benchmark
+  vpi-sample-06-klt-tracker:
+    command-chain:
+      - bin/graphics-core22-wrapper
+      - bin/vpi-wrapper
+    command: /opt/nvidia/vpi3/samples/06-klt_tracker/vpi_sample_06_klt_tracker
+  vpi-sample-07-fft:
+    command-chain:
+      - bin/graphics-core22-wrapper
+      - bin/vpi-wrapper
+    command: /opt/nvidia/vpi3/samples/07-fft/vpi_sample_07_fft
+  vpi-sample-08-cross-aarch64-l4t:
+    command-chain:
+      - bin/graphics-core22-wrapper
+      - bin/vpi-wrapper
+    command: /opt/nvidia/vpi3/samples/08-cross_aarch64_l4t/vpi_sample_08_cross_aarch64_l4t
+  vpi-sample-09-tnr:
+    command-chain:
+      - bin/graphics-core22-wrapper
+      - bin/vpi-wrapper
+    command: /opt/nvidia/vpi3/samples/09-tnr/vpi_sample_09_tnr
+  vpi-sample-10-perspwarp:
+    command-chain:
+      - bin/graphics-core22-wrapper
+      - bin/vpi-wrapper
+    command: /opt/nvidia/vpi3/samples/10-perspwarp/vpi_sample_10_perspwarp
+  vpi-sample-11-fisheye:
+    command-chain:
+      - bin/graphics-core22-wrapper
+      - bin/vpi-wrapper
+    command: /opt/nvidia/vpi3/samples/11-fisheye/vpi_sample_11_fisheye
+  vpi-sample-12-optflow-lk:
+    command-chain:
+      - bin/graphics-core22-wrapper
+      - bin/vpi-wrapper
+    command: /opt/nvidia/vpi3/samples/12-optflow_lk/vpi_sample_12_optflow_lk
+  vpi-sample-13-optflow-dense:
+    command-chain:
+      - bin/graphics-core22-wrapper
+      - bin/vpi-wrapper
+    command: /opt/nvidia/vpi3/samples/13-optflow_dense/vpi_sample_13_optflow_dense
+  vpi-sample-14-background-subtractor:
+    command-chain:
+      - bin/graphics-core22-wrapper
+      - bin/vpi-wrapper
+    command: /opt/nvidia/vpi3/samples/14-background_subtractor/vpi_sample_14_background_subtractor
+  vpi-sample-15-image-view:
+    command-chain:
+      - bin/graphics-core22-wrapper
+      - bin/vpi-wrapper
+    command: /opt/nvidia/vpi3/samples/15-image_view/vpi_sample_15_image_view
+  vpi-sample-17-template-matching:
+    command-chain:
+      - bin/graphics-core22-wrapper
+      - bin/vpi-wrapper
+    command: /opt/nvidia/vpi3/samples/17-template_matching/vpi_sample_17_template_matching
+  vpi-sample-18-orb-feature-detector:
+    command-chain:
+      - bin/graphics-core22-wrapper
+      - bin/vpi-wrapper
+    command: /opt/nvidia/vpi3/samples/18-orb_feature_detector/vpi_sample_18_orb_feature_detector
+  vpi-sample-19-dcf-tracker:
+    command-chain:
+      - bin/graphics-core22-wrapper
+      - bin/vpi-wrapper
+    command: /opt/nvidia/vpi3/samples/19-dcf_tracker/vpi_sample_19_dcf_tracker
+  vpi-blur:
+    command-chain:
+      - bin/graphics-core22-wrapper
+      - bin/vpi-wrapper
+    command: /opt/nvidia/vpi3/samples/tutorial_blur/vpi_blur
+
