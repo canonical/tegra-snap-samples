@@ -25,6 +25,11 @@ package-repositories:
     architectures: [arm64]
 
 plugs:
+  shutdown:
+  dbus-consumer:
+    interface: dbus
+    bus: system
+    name: org.freedesktop.login1
   hardware-observe:
   set-power-management-mode:
     interface: system-files
@@ -54,6 +59,12 @@ plugs:
       - /sys/kernel/debug/bpmp/debug/clk/emc/rate
       - /sys/kernel/debug/bpmp/debug/clk/emc/mrq_rate_locked
 
+slots:
+  dbus-provider:
+    interface: dbus
+    bus: system
+    name: org.freedesktop.login1
+
 layout:
   /etc/nvpmodel.conf:
     bind-file: $SNAP_DATA/etc/nvpmodel.conf
@@ -64,8 +75,12 @@ apps:
   nvpmodel:
     command-chain: [bin/wrapper_local]
     command: usr/sbin/nvpmodel
+    environment:
+      PYTHONPATH: $SNAP/usr/lib/python3/dist-packages:$PYTHONPATH
     plugs:
       - set-power-management-mode
+      - shutdown
+      - dbus-consumer
   jetson-clocks-show:
     command-chain: [bin/wrapper_local]
     command: usr/bin/jetson_clocks --show
@@ -82,6 +97,13 @@ parts:
       - coreutils
       - systemd
       - bc
+  reboot:
+    plugin: dump
+    source: .
+    organize:
+      reboot.py: usr/sbin/reboot
+    stage-packages:
+      - python3-dbus
   launchers:
     plugin: dump
     source: launchers/
