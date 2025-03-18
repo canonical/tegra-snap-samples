@@ -1,0 +1,12 @@
+#!/bin/bash
+set -euo pipefail
+
+SELF="$( cd -- "$(dirname "$0")/.." ; pwd -P )"
+
+ARCH_TRIPLET="aarch64-linux-gnu"
+LD_LIBRARY_PATH=${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}${SELF}/vpi/opt/nvidia/vpi3/lib/${ARCH_TRIPLET}:${SELF}/vpi/lib/${ARCH_TRIPLET}:${SELF}/vpi/usr/lib/${ARCH_TRIPLET}:${SELF}/vpi/usr/lib/
+
+export LD_LIBRARY_PATH
+
+exec "$@"
+
