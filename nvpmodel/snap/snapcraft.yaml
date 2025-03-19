@@ -86,6 +86,11 @@ apps:
     command: usr/bin/jetson_clocks --show
     plugs:
       - set-power-management-mode
+  nvfancontrol:
+    command-chain: [bin/wrapper_local]
+    command: usr/sbin/nvfancontrol
+    daemon: simple
+    restart-condition: on-failure
 
 parts:
   nvpmodel:
@@ -94,8 +99,8 @@ parts:
       - nvidia-l4t-nvpmodel
       - nvidia-l4t-core
       - nvidia-l4t-tools
+      - nvidia-l4t-nvfancontrol
       - coreutils
-      - systemd
       - bc
   reboot:
     plugin: dump
@@ -104,6 +109,11 @@ parts:
       reboot.py: usr/sbin/reboot
     stage-packages:
       - python3-dbus
+  systemctl:
+    plugin: dump
+    source: .
+    organize:
+      systemctl.sh: bin/systemctl
   launchers:
     plugin: dump
     source: launchers/
