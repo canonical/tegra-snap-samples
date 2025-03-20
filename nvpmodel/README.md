@@ -57,8 +57,6 @@ cpu5:  Online=1 Governor=ondemand MinFreq=729600 MaxFreq=1510400 CurrentFreq=729
 GPU MinFreq=306000000 MaxFreq=624750000 CurrentFreq=306000000
 Active GPU TPCs: 4
 EMC MinFreq=204000000 MaxFreq=2133000000 CurrentFreq=665600000 FreqOverride=0
-Failed to retrieve unit state: Access denied
-Failed to retrieve unit state: Access denied
 FAN Dynamic Speed Control=kernel hwmon0_pwm1=88
 ```
 
