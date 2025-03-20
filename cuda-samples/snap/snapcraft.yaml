@@ -24,6 +24,8 @@ package-repositories:
     key-server: https://repo.download.nvidia.com/jetson/jetson-ota-public.asc
     url: https://repo.download.nvidia.com/jetson/common
     architectures: [arm64]
+  - type: apt
+    ppa: ubuntu-tegra/updates
 
 plugs:
   hardware-observe:
@@ -57,7 +59,7 @@ parts:
     plugin: nil
     build-packages:
       - initramfs-tools
-      - nvidia-l4t-cuda
+      - nvidia-tegra-drivers-36
       - cuda-12-6
       - cmake
     stage-packages:
