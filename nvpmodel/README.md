@@ -12,7 +12,7 @@ Some `layouts` were defined to bind-mount directories from inside the snap to a 
 
 # Build, install and run the snap.
 
-This snap has no external dependencies for being built and installed, there is just needed to run `snapcraft` from the `nvpmodel/` directory, install the resulting snap using the `--dangerous` flag, and finally connect all necessary interfaces.
+This snap has no external dependencies for being built and installed, there is just needed to run `snapcraft` from the `nvpmodel/` directory, install the resulting snap using the `--dangerous` flag, connect all necessary interfaces, and finally restart the snap, this last step is needed because inside the snap there are two services (i.e., `nvpower` and `nvpmodel`) which need the set-power-management-mode interface to be connected to be properly executed.
 
 ```
 $ snapcraft -v --destructive-mode
@@ -22,6 +22,7 @@ $ sudo snap connect nvpmodel:hardware-observe
 $ sudo snap connect nvpmodel:set-power-management-mode
 $ sudo snap connect nvpmodel:shutdown
 $ sudo snap connect nvpmodel:dbus-consumer nvpmodel:dbus-provider
+$ sudo snap restart nvpmodel
 ```
 
 # Update and read the power management mode.
