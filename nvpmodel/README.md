@@ -29,15 +29,13 @@ $ sudo snap connect nvpmodel:dbus-consumer nvpmodel:dbus-provider
 The command shown below can be used to update the power management mode of a `Jetson Orin Nano 8GB` device, `-m 0` corresponds on this case to `15W`, when switching between power modes the snap might request the system to be rebooted.
 
 ```
-$ sudo snap run nvpmodel.nvpmodel -m 0 --conf /snap/nvpmodel/current/etc/nvpmodel/nvpmodel_p3767_0003.conf
+$ sudo snap run nvpmodel.nvpmodel -m 0
 ```
-
-The `nvpmodel_p3767_0003.conf` file is set according to the hardware variant, all the available files are stored on `/snap/nvpmodel/current/etc/nvpmodel/`.
 
 The following command can be used to retrieve the power management mode that is currently set on a  `Jetson Orin Nano 8GB` device.
 
 ```
-$ sudo snap run nvpmodel.nvpmodel --query --conf /snap/nvpmodel/current/etc/nvpmodel/nvpmodel_p3767_0003.conf
+$ sudo snap run nvpmodel.nvpmodel --query
 NV Power Mode: 15W
 0
 ```
@@ -57,9 +55,13 @@ cpu5:  Online=1 Governor=ondemand MinFreq=729600 MaxFreq=1510400 CurrentFreq=729
 GPU MinFreq=306000000 MaxFreq=624750000 CurrentFreq=306000000
 Active GPU TPCs: 4
 EMC MinFreq=204000000 MaxFreq=2133000000 CurrentFreq=665600000 FreqOverride=0
+Failed to retrieve unit state: Access denied
+Failed to retrieve unit state: Access denied
 FAN Dynamic Speed Control=kernel hwmon0_pwm1=88
 ```
 
 As can be seen on the example above, the settings corresponds to the `15W` power mode that was set by `nvpmodel`.
 
 [Supported Modes and Power Efficiency](https://docs.nvidia.com/jetson/archives/r36.4.3/DeveloperGuide/SD/PlatformPowerAndPerformance/JetsonOrinNanoSeriesJetsonOrinNxSeriesAndJetsonAgxOrinSeries.html#sd-platformpowerandperformance-supportedmodesandpowerefficiency)
+
+It is important to note that the `Failed to retrieve unit state: Access denied` messages displayed when running `snap run nvpmodel.jetson-clocks-show` does not represent an issue, those are only displayed because `jetson_clocks` tries to make some `systemctl` calls to monitor if two services are active, but those are not relevant for the use case of this snap application.
