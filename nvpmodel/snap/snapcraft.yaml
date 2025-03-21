@@ -107,6 +107,8 @@ apps:
     command-chain: [bin/wrapper_local]
     command: etc/systemd/nvpower.sh
     daemon: simple
+    before:
+      - nvpmodel-service
     restart-condition: on-failure
     plugs:
       - set-power-management-mode
@@ -114,6 +116,8 @@ apps:
     command-chain: [bin/wrapper_local]
     command: usr/sbin/nvpmodel -f /etc/nvpmodel.conf
     daemon: simple
+    after:
+      - nvpower-service
     restart-condition: on-failure
     plugs:
       - set-power-management-mode
