@@ -71,14 +71,10 @@ parts:
       - python3-numpy
       - python3-pil
     override-build: |
-      craftctl default
-      #snapcraftctl build
       export LD_LIBRARY_PATH=${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/usr/lib/aarch64-linux-gnu/tegra-egl/
-      cd /opt/nvidia/vpi3/samples/
+      cd $CRAFT_PART_INSTALL/opt/nvidia/vpi3/samples/
       for f in */CMakeLists.txt ; do pushd $(dirname $f) ; cmake -DOpenCV_DIR=/usr/lib/cmake/opencv4 . ; VERBOSE=1 make ; popd ; done
       for f in */CMakeLists.txt ; do pushd $(dirname $f) ; rm -fr CMakeFiles ; popd ; done
-      mkdir -p $CRAFT_PRIME/opt/nvidia/vpi3/
-      cp -r /opt/nvidia/vpi3/samples $CRAFT_PRIME/opt/nvidia/vpi3
     override-prime: |
       craftctl default
       rm -fr $CRAFT_PRIME/usr/share/icons
