@@ -1,0 +1,54 @@
+name: vpi-runtime
+base: core22
+version: 3.2.4-1
+summary: NVIDIA VPI runtime libraries
+description: |
+  This snap contains the VPI runtime libraries contained in the deb
+  packages nvidia-vpi, libnvvpi3 and python3.10-vpi3 from nvidia's 
+  repositories.
+
+grade: stable
+confinement: strict
+
+package-repositories:
+  - type: apt
+    components: [main]
+    suites: [r36.4]
+    key-id: 3C6D1FF3100C8C3ABB0869C0E6543461A9996195
+    key-server: https://repo.download.nvidia.com/jetson/jetson-ota-public.asc
+    url: https://repo.download.nvidia.com/jetson/t234
+    architectures: [arm64]
+  - type: apt
+    components: [main]
+    suites: [r36.4]
+    key-id: 3C6D1FF3100C8C3ABB0869C0E6543461A9996195
+    key-server: https://repo.download.nvidia.com/jetson/jetson-ota-public.asc
+    url: https://repo.download.nvidia.com/jetson/common
+    architectures: [arm64]
+  - type: apt
+    ppa: ubuntu-tegra/updates
+
+parts:
+  vpi-runtime:
+    plugin: nil
+    stage-packages:
+      - libopencv
+      - libopencv-python
+      - nvidia-vpi
+      - libnvvpi3
+      - python3.10-vpi3
+      - nvidia-l4t-multimedia
+      - nvidia-l4t-pva
+    override-prime: |
+      craftctl default
+      rm -fr $CRAFT_PRIME/usr/share/icons
+
+  scripts:
+    plugin: dump
+    source: .
+
+slots:
+  vpi3-core22:
+    interface: content
+    read: [$SNAP]
+
