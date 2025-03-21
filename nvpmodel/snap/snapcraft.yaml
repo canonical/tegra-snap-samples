@@ -34,16 +34,21 @@ plugs:
   set-power-management-mode:
     interface: system-files
     write:
+      - /etc/nvpmodel.conf
+      - /sys/power/state
       - /sys/devices/system/cpu/cpu0/online
       - /sys/devices/system/cpu/cpu1/online
       - /sys/devices/system/cpu/cpu2/online
       - /sys/devices/system/cpu/cpu3/online
       - /sys/devices/system/cpu/cpu4/online
       - /sys/devices/system/cpu/cpu5/online
+      - /sys/devices/system/cpu/cpufreq/policy0/scaling_governor
+      - /sys/devices/system/cpu/cpufreq/policy4/scaling_governor
       - /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
       - /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
       - /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
       - /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
+      - /sys/devices/system/cpu/cpufreq/schedutil/rate_limit_us
       - /sys/devices/platform/bus@0/17000000.gpu/tpc_pg_mask
       - /sys/devices/platform/bus@0/17000000.gpu/fbp_pg_mask
       - /sys/devices/platform/bus@0/17000000.gpu/power/control
@@ -66,12 +71,26 @@ slots:
     name: org.freedesktop.login1
 
 layout:
-  /etc/nvpmodel.conf:
-    bind-file: $SNAP_DATA/etc/nvpmodel.conf
+  /etc/nvpmodel:
+    bind: $SNAP/etc/nvpmodel
   /var/lib/nvpmodel:
     bind: $SNAP_DATA/var/lib/nvpmodel
 
 apps:
+  nvpower-service:
+    command-chain: [bin/wrapper_local]
+    command: etc/systemd/nvpower.sh
+    daemon: simple
+    restart-condition: on-failure
+    plugs:
+      - set-power-management-mode
+  nvpmodel-service:
+    command-chain: [bin/wrapper_local]
+    command: usr/sbin/nvpmodel -f /etc/nvpmodel.conf
+    daemon: simple
+    restart-condition: on-failure
+    plugs:
+      - set-power-management-mode
   nvpmodel:
     command-chain: [bin/wrapper_local]
     command: usr/sbin/nvpmodel
