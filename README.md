@@ -38,3 +38,8 @@ Packages several camera and gstreamer utilities that can be used to access the c
 # [nvidia-container-runtime](nvidia-container-runtime/)
 
 This directory contains supporting files needed in order to enable the nvidia container runtime for docker on Ubuntu Core.
+
+# [nvpmodel](nvpmodel)
+
+Packages the nvpmodel and jetson-clocks utilities to set a determined power model and verify the corresponding system clock configuration.
+
