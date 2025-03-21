@@ -42,6 +42,8 @@ plugs:
       - /sys/devices/system/cpu/cpu3/online
       - /sys/devices/system/cpu/cpu4/online
       - /sys/devices/system/cpu/cpu5/online
+      - /sys/devices/system/cpu/cpu6/online
+      - /sys/devices/system/cpu/cpu7/online
       - /sys/devices/system/cpu/cpufreq/policy0/scaling_governor
       - /sys/devices/system/cpu/cpufreq/policy4/scaling_governor
       - /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
@@ -69,6 +71,24 @@ plugs:
       - /sys/devices/platform/bus@0/c240000.i2c/i2c-1/1-0040/hwmon/hwmon3/curr1_crit
       - /sys/devices/platform/bus@0/13e00000.host1x
       - /sys/kernel/debug/tegra-host1x/actmon
+      - /sys/kernel/debug/clk/dla0_core/clk_min_rate
+      - /sys/kernel/debug/clk/dla0_core/clk_max_rate
+      - /sys/kernel/debug/clk/dla0_core/clk_rate
+      - /sys/kernel/debug/clk/dla0_falcon/clk_min_rate
+      - /sys/kernel/debug/clk/dla0_falcon/clk_max_rate
+      - /sys/kernel/debug/clk/dla0_falcon/clk_rate
+      - /sys/kernel/debug/clk/dla1_core/clk_min_rate
+      - /sys/kernel/debug/clk/dla1_core/clk_max_rate
+      - /sys/kernel/debug/clk/dla1_core/clk_rate
+      - /sys/kernel/debug/clk/dla1_falcon/clk_min_rate
+      - /sys/kernel/debug/clk/dla1_falcon/clk_max_rate
+      - /sys/kernel/debug/clk/dla1_falcon/clk_rate
+      - /sys/kernel/debug/clk/pva0_vps/clk_min_rate
+      - /sys/kernel/debug/clk/pva0_vps/clk_max_rate
+      - /sys/kernel/debug/clk/pva0_vps/clk_rate
+      - /sys/kernel/debug/clk/pva0_cpu_axi/clk_min_rate
+      - /sys/kernel/debug/clk/pva0_cpu_axi/clk_max_rate
+      - /sys/kernel/debug/clk/pva0_cpu_axi/clk_rate
 
 slots:
   dbus-provider:
