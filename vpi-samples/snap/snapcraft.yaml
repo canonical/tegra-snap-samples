@@ -19,12 +19,6 @@ plugs:
     interface: content
     target: $SNAP/vpi
 
-layout:
-  /usr/share/libdrm:
-    bind: $SNAP/graphics/libdrm
-  /usr/share/drirc.d:
-    symlink: $SNAP/graphics/drirc.d
-
 package-repositories:
   - type: apt
     components: [main]
