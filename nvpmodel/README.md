@@ -1,6 +1,6 @@
 # nvpmodel
 
-This snap packages the `nvpmodel` and the `jetson_clocks` utilities which can be used to set a determined power mode (e.g., `7W`, `15W`, `25W`, `MAXN_SUPER`, etc...) and read the mode that has configured, displaying the system clocks (CPU, GPU, and EMC) and the fan status of a Jetson device.
+This snap packages the `nvpmodel` and the `jetson_clocks` utilities which can be used to set a determined power mode (e.g., `7W`, `15W`, `25W`, `MAXN_SUPER`, etc...) and read the mode that was configured, displaying the system clocks (CPU, GPU, and EMC) and the fan status of a Jetson device.
 
 The following website can be consulted, for more information about the NVIDIA power modes on Jetson devices.
 
@@ -8,11 +8,11 @@ The following website can be consulted, for more information about the NVIDIA po
 
 This snap doesn't require any extra build steps for the software it provides since it uses staging packages, such as some specific NVIDIA L4T packages (i.e., `nvidia-l4t-nvpmodel`, `nvidia-l4t-core` and `nvidia-l4t-tools`) to provide runtime libraries and binaries.
 
-Some `layouts` were defined to bind-mount directories from inside the snap to a different location in the execution environment. This is necessary because the tools expect certain libraries and configuration files in hard-coded paths by default, however, all files included in the snap are stored under `/snap/nvpmodel/current`.
+Some `layouts` were defined to bind-mount directories from inside the snap to a different location in the execution environment. This is necessary because the tools expect certain libraries and configuration files in hard-coded paths by default.
 
 # Build, install and run the snap.
 
-This snap has no external dependencies for being built and installed, there is just needed to run `snapcraft` from the `nvpmodel/` directory, install the resulting snap using the `--dangerous` flag, connect all necessary interfaces, and finally restart the snap, this last step is needed because inside the snap there are two services (i.e., `nvpower` and `nvpmodel`) which need the set-power-management-mode interface to be connected to be properly executed.
+This snap has no external dependencies for being built and installed, there is just needed to run `snapcraft`, install the resulting snap using the `--dangerous` flag, connect all necessary interfaces, and finally restart the snap, this last step is needed because inside the snap there are two services (i.e., `nvpower` and `nvpmodel`) which need the set-power-management-mode interface to be connected to be properly executed.
 
 ```
 $ snapcraft -v --destructive-mode
@@ -33,7 +33,7 @@ The command shown below can be used to update the power management mode of a `Je
 $ sudo snap run nvpmodel.nvpmodel -m 0
 ```
 
-The following command can be used to retrieve the power management mode that is currently set on a  `Jetson Orin Nano 8GB` device.
+The following command can be used to retrieve the power management mode that is currently a device.
 
 ```
 $ sudo snap run nvpmodel.nvpmodel --query
@@ -62,7 +62,5 @@ FAN Dynamic Speed Control=kernel hwmon0_pwm1=88
 ```
 
 As can be seen on the example above, the settings corresponds to the `15W` power mode that was set by `nvpmodel`.
-
-[Supported Modes and Power Efficiency](https://docs.nvidia.com/jetson/archives/r36.4.3/DeveloperGuide/SD/PlatformPowerAndPerformance/JetsonOrinNanoSeriesJetsonOrinNxSeriesAndJetsonAgxOrinSeries.html#sd-platformpowerandperformance-supportedmodesandpowerefficiency)
 
 It is important to note that the `Failed to retrieve unit state: Access denied` messages displayed when running `snap run nvpmodel.jetson-clocks-show` does not represent an issue, those are only displayed because `jetson_clocks` tries to make some `systemctl` calls to monitor if two services are active, but those are not relevant for the use case of this snap application.
