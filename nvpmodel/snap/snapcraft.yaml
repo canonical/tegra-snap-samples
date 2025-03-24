@@ -77,8 +77,8 @@ plugs:
       - /sys/kernel/debug/clk/pva0_cpu_axi/clk_min_rate
       - /sys/kernel/debug/clk/pva0_cpu_axi/clk_max_rate
       - /sys/kernel/debug/clk/pva0_cpu_axi/clk_rate
-    read:
       - /sys/kernel/nvpmodel_clk_cap/emc
+    read:
       - /sys/kernel/debug/bpmp/debug/clk/emc/min_rate
       - /sys/kernel/debug/bpmp/debug/clk/emc/rate
       - /sys/kernel/debug/bpmp/debug/clk/emc/mrq_rate_locked
