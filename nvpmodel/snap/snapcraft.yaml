@@ -37,46 +37,19 @@ plugs:
       - /etc/nvpmodel.conf
       - /sys/power/state
       - /sys/devices/system/cpu
-      - /sys/devices/platform/bus@0/17000000.gpu/tpc_pg_mask
-      - /sys/devices/platform/bus@0/17000000.gpu/fbp_pg_mask
-      - /sys/devices/platform/bus@0/17000000.gpu/power/control
-      - /sys/devices/platform/bus@0/17000000.gpu/devfreq/17000000.gpu/max_freq
-      - /sys/devices/platform/bus@0/17000000.gpu/devfreq/17000000.gpu/min_freq
-      - /sys/devices/platform/17000000.gpu/devfreq_dev/available_frequencies
-      - /sys/devices/platform/17000000.gpu/devfreq_dev/min_freq
-      - /sys/devices/platform/17000000.gpu/devfreq_dev/max_freq
-      - /sys/class/devfreq/17000000.gpu/device/of_node/compatible
-      - /sys/devices/platform/bus@0/17000000.gpu/railgate_enable
-      - /sys/devices/platform/bus@0/c240000.i2c/i2c-1/1-0040/hwmon/hwmon3/samples
-      - /sys/devices/platform/bus@0/c240000.i2c/i2c-1/1-0040/hwmon/hwmon3/update_interval
-      - /sys/devices/platform/bus@0/c240000.i2c/i2c-1/1-0040/hwmon/hwmon3/curr1_max
-      - /sys/devices/platform/bus@0/c240000.i2c/i2c-1/1-0040/hwmon/hwmon3/curr1_crit
-      - /sys/devices/platform/bus@0/c240000.i2c/i2c-1/1-0041/hwmon/hwmon5/samples
-      - /sys/devices/platform/bus@0/c240000.i2c/i2c-1/1-0041/hwmon/hwmon5/update_interval
-      - /sys/devices/platform/bus@0/c240000.i2c/i2c-1/1-0041/hwmon/hwmon5/in1_label
-      - /sys/devices/platform/bus@0/c240000.i2c/i2c-1/1-0040/hwmon/hwmon4/samples
-      - /sys/devices/platform/bus@0/c240000.i2c/i2c-1/1-0040/hwmon/hwmon4/update_interval
-      - /sys/devices/platform/bus@0/c240000.i2c/i2c-1/1-0040/hwmon/hwmon4/curr4_crit
+      - /sys/devices/platform/bus@0/17000000.gpu
+      - /sys/firmware/devicetree/base/bus@0/gpu@17000000/compatible
+      - /sys/devices/platform/bus@0/c240000.i2c/i2c-1/1-0040/hwmon/hwmon3
+      - /sys/devices/platform/bus@0/c240000.i2c/i2c-1/1-0041/hwmon/hwmon5
+      - /sys/devices/platform/bus@0/c240000.i2c/i2c-1/1-0040/hwmon/hwmon4
       - /sys/devices/platform/bus@0/13e00000.host1x
       - /sys/kernel/debug/tegra-host1x/actmon
-      - /sys/kernel/debug/clk/dla0_core/clk_min_rate
-      - /sys/kernel/debug/clk/dla0_core/clk_max_rate
-      - /sys/kernel/debug/clk/dla0_core/clk_rate
-      - /sys/kernel/debug/clk/dla0_falcon/clk_min_rate
-      - /sys/kernel/debug/clk/dla0_falcon/clk_max_rate
-      - /sys/kernel/debug/clk/dla0_falcon/clk_rate
-      - /sys/kernel/debug/clk/dla1_core/clk_min_rate
-      - /sys/kernel/debug/clk/dla1_core/clk_max_rate
-      - /sys/kernel/debug/clk/dla1_core/clk_rate
-      - /sys/kernel/debug/clk/dla1_falcon/clk_min_rate
-      - /sys/kernel/debug/clk/dla1_falcon/clk_max_rate
-      - /sys/kernel/debug/clk/dla1_falcon/clk_rate
-      - /sys/kernel/debug/clk/pva0_vps/clk_min_rate
-      - /sys/kernel/debug/clk/pva0_vps/clk_max_rate
-      - /sys/kernel/debug/clk/pva0_vps/clk_rate
-      - /sys/kernel/debug/clk/pva0_cpu_axi/clk_min_rate
-      - /sys/kernel/debug/clk/pva0_cpu_axi/clk_max_rate
-      - /sys/kernel/debug/clk/pva0_cpu_axi/clk_rate
+      - /sys/kernel/debug/clk/dla0_core
+      - /sys/kernel/debug/clk/dla0_falcon
+      - /sys/kernel/debug/clk/dla1_core
+      - /sys/kernel/debug/clk/dla1_falcon
+      - /sys/kernel/debug/clk/pva0_vps
+      - /sys/kernel/debug/clk/pva0_cpu_axi
       - /sys/kernel/nvpmodel_clk_cap/emc
     read:
       - /sys/kernel/debug/bpmp/debug/clk/emc/min_rate
