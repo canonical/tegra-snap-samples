@@ -33,7 +33,7 @@ The command shown below can be used to update the power management mode of a `Je
 $ sudo snap run nvpmodel.nvpmodel -m 0
 ```
 
-The following command can be used to retrieve the power management mode that is currently a device.
+The following command can be used to retrieve the power management mode that is currently set on a device.
 
 ```
 $ sudo snap run nvpmodel.nvpmodel --query
