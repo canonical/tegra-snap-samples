@@ -1,0 +1,127 @@
+name: nvpmodel
+summary: Sample nvpmodel apps for Tegra
+description: |
+  Collection of nvpmodel use-cases for Tegra platforms
+version: '1.0'
+confinement: strict
+grade: stable
+
+base: core22
+
+package-repositories:
+  - type: apt
+    components: [main]
+    suites: [r36.4]
+    key-id: 3C6D1FF3100C8C3ABB0869C0E6543461A9996195
+    key-server: https://repo.download.nvidia.com/jetson/jetson-ota-public.asc
+    url: https://repo.download.nvidia.com/jetson/t234
+    architectures: [arm64]
+  - type: apt
+    components: [main]
+    suites: [r36.4]
+    key-id: 3C6D1FF3100C8C3ABB0869C0E6543461A9996195
+    key-server: https://repo.download.nvidia.com/jetson/jetson-ota-public.asc
+    url: https://repo.download.nvidia.com/jetson/common
+    architectures: [arm64]
+
+plugs:
+  shutdown:
+  dbus-consumer:
+    interface: dbus
+    bus: system
+    name: org.freedesktop.login1
+  hardware-observe:
+  set-power-management-mode:
+    interface: system-files
+    write:
+      - /etc/nvpmodel.conf
+      - /sys/power/state
+      - /sys/devices/system/cpu
+      - /sys/devices/platform/bus@0/17000000.gpu
+      - /sys/firmware/devicetree/base/bus@0/gpu@17000000/compatible
+      - /sys/devices/platform/bus@0/c240000.i2c/i2c-1/1-0040/hwmon/hwmon3
+      - /sys/devices/platform/bus@0/c240000.i2c/i2c-1/1-0041/hwmon/hwmon5
+      - /sys/devices/platform/bus@0/c240000.i2c/i2c-1/1-0040/hwmon/hwmon4
+      - /sys/devices/platform/bus@0/13e00000.host1x
+      - /sys/kernel/debug/tegra-host1x/actmon
+      - /sys/kernel/debug/clk/dla0_core
+      - /sys/kernel/debug/clk/dla0_falcon
+      - /sys/kernel/debug/clk/dla1_core
+      - /sys/kernel/debug/clk/dla1_falcon
+      - /sys/kernel/debug/clk/pva0_vps
+      - /sys/kernel/debug/clk/pva0_cpu_axi
+      - /sys/kernel/nvpmodel_clk_cap/emc
+    read:
+      - /sys/kernel/debug/bpmp/debug/clk/emc/min_rate
+      - /sys/kernel/debug/bpmp/debug/clk/emc/rate
+      - /sys/kernel/debug/bpmp/debug/clk/emc/mrq_rate_locked
+
+slots:
+  dbus-provider:
+    interface: dbus
+    bus: system
+    name: org.freedesktop.login1
+
+layout:
+  /etc/nvpmodel:
+    bind: $SNAP/etc/nvpmodel
+  /var/lib/nvpmodel:
+    bind: $SNAP_DATA/var/lib/nvpmodel
+
+apps:
+  nvpower-service:
+    command-chain: [bin/wrapper_local]
+    command: etc/systemd/nvpower.sh
+    daemon: simple
+    before:
+      - nvpmodel-service
+    restart-condition: on-failure
+    plugs:
+      - set-power-management-mode
+  nvpmodel-service:
+    command-chain: [bin/wrapper_local]
+    command: usr/sbin/nvpmodel -f /etc/nvpmodel.conf
+    daemon: simple
+    after:
+      - nvpower-service
+    restart-condition: on-failure
+    plugs:
+      - set-power-management-mode
+  nvpmodel:
+    command-chain: [bin/wrapper_local]
+    command: usr/sbin/nvpmodel
+    environment:
+      PYTHONPATH: $SNAP/usr/lib/python3/dist-packages:$PYTHONPATH
+    plugs:
+      - set-power-management-mode
+      - shutdown
+      - dbus-consumer
+  jetson-clocks-show:
+    command-chain: [bin/wrapper_local]
+    command: usr/bin/jetson_clocks --show
+    plugs:
+      - set-power-management-mode
+
+parts:
+  nvpmodel:
+    plugin: nil
+    stage-packages:
+      - nvidia-l4t-nvpmodel
+      - nvidia-l4t-core
+      - nvidia-l4t-tools
+      - coreutils
+      - systemd
+      - bc
+  reboot:
+    plugin: dump
+    source: .
+    organize:
+      reboot.py: usr/sbin/reboot
+    stage-packages:
+      - python3-dbus
+  launchers:
+    plugin: dump
+    source: launchers/
+    build-attributes: [no-patchelf]
+    organize:
+      '*': bin/
