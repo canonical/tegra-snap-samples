@@ -68,7 +68,7 @@ layout:
   /var/lib/nvpmodel:
     bind: $SNAP_DATA/var/lib/nvpmodel
   /usr/sbin/nvpmodel:
-    bind-file: $SNAP/usr/sbin/nvpmodel
+    symlink: $SNAP/usr/sbin/nvpmodel
 
 apps:
   nvpower-service:
