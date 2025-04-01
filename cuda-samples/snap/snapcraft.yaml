@@ -24,8 +24,6 @@ package-repositories:
     key-server: https://repo.download.nvidia.com/jetson/jetson-ota-public.asc
     url: https://repo.download.nvidia.com/jetson/common
     architectures: [arm64]
-  - type: apt
-    ppa: ubuntu-tegra/updates
 
 plugs:
   hardware-observe:
@@ -59,7 +57,6 @@ parts:
     plugin: nil
     build-packages:
       - initramfs-tools
-      - nvidia-tegra-drivers-36
       - cuda-12-6
       - cmake
     stage-packages:
@@ -69,6 +66,9 @@ parts:
     source-tag: v12.5
     override-build: |
       set -x
+      mkdir -p /opt/nvidia/l4t-packages/
+      touch /opt/nvidia/l4t-packages/.nv-l4t-disable-boot-fw-update-in-preinstall
+      apt install --yes nvidia-l4t-cuda
       echo '/usr/local/cuda-12.6/compat' | tee -a /etc/ld.so.conf.d/000_cuda.conf
       ldconfig
       mkdir -p $CRAFT_PART_INSTALL/usr/bin

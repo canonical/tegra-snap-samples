@@ -23,8 +23,6 @@ package-repositories:
     key-server: https://repo.download.nvidia.com/jetson/jetson-ota-public.asc
     url: https://repo.download.nvidia.com/jetson/common
     architectures: [arm64]
-  - type: apt
-    ppa: ubuntu-tegra/updates
 
 plugs:
   hardware-observe:
@@ -51,12 +49,14 @@ parts:
     build-packages:
       - initramfs-tools
       - cuda-12-6
-      - nvidia-tegra-drivers-36
         #- libnvinfer-bin
       - libnvinfer-samples
     stage-packages:
       - libnvinfer-samples
     override-build: |
+      mkdir -p /opt/nvidia/l4t-packages/
+      touch /opt/nvidia/l4t-packages/.nv-l4t-disable-boot-fw-update-in-preinstall
+      apt install --yes nvidia-l4t-dla-compiler nvidia-l4t-cuda
       echo '/usr/local/cuda-12.6/compat' | tee -a /etc/ld.so.conf.d/000_cuda.conf
       ldconfig
       cd $CRAFT_PART_INSTALL/usr/src/tensorrt/samples
