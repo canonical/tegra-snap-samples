@@ -88,11 +88,28 @@ apps:
 parts:
   camera:
     plugin: nil
+    override-stage: |
+      L4T_DEB_PACKAGES_PATH=${L4T_DEB_PACKAGES_PATH:="NVIDIA_ARCHIVE"}
+      if [ "$L4T_DEB_PACKAGES_PATH" = "NVIDIA_ARCHIVE" ]; then
+        apt update
+        apt download nvidia-l4t-camera nvidia-l4t-gstreamer nvidia-l4t-3d-core nvidia-l4t-multimedia
+        debian_packages=$(find . -name "nvidia-l4t*.deb")
+      elif [ -d $L4T_DEB_PACKAGES_PATH ]; then
+        debian_packages="$(find $L4T_DEB_PACKAGES_PATH -name "nvidia-l4t-camera_*.deb")"
+        debian_packages="$debian_packages $(find $L4T_DEB_PACKAGES_PATH -name "nvidia-l4t-gstreamer_*.deb")"
+        debian_packages="$debian_packages $(find $L4T_DEB_PACKAGES_PATH -name "nvidia-l4t-3d-core_*.deb")"
+        debian_packages="$debian_packages $(find $L4T_DEB_PACKAGES_PATH -name "nvidia-l4t-multimedia_*.deb")"
+      fi
+      if [[ ! -z $debian_packages ]]; then
+        readarray -t <<<$debian_packages
+        for f in "${MAPFILE[@]}"
+        do
+          echo "extracting: $f..."
+          dpkg -x $f $CRAFT_PART_INSTALL/
+        done
+      fi
+      craftctl default
     stage-packages:
-      - nvidia-l4t-camera
-      - nvidia-l4t-gstreamer
-      - nvidia-l4t-3d-core
-      - nvidia-l4t-multimedia
       - v4l-utils
       - gstreamer1.0-tools
       - gstreamer1.0-alsa
