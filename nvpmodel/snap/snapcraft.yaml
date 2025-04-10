@@ -114,7 +114,10 @@ parts:
         apt download nvidia-l4t-nvpmodel nvidia-l4t-core nvidia-l4t-tools nvidia-l4t-init
         debian_packages=$(find . -name "nvidia-l4t*.deb")
       elif [ -d $L4T_DEB_PACKAGES_PATH ]; then
-        debian_packages=$(find $L4T_DEB_PACKAGES_PATH -name "nvidia-l4t*.deb")
+        debian_packages="$(find $L4T_DEB_PACKAGES_PATH -name "nvidia-l4t-nvpmodel_*.deb")"
+        debian_packages="$debian_packages $(find $L4T_DEB_PACKAGES_PATH -name "nvidia-l4t-core_*.deb")"
+        debian_packages="$debian_packages $(find $L4T_DEB_PACKAGES_PATH -name "nvidia-l4t-tools_*.deb")"
+        debian_packages="$debian_packages $(find $L4T_DEB_PACKAGES_PATH -name "nvidia-l4t-init_*.deb")"
       fi
       if [[ ! -z $debian_packages ]]; then
         readarray -t <<<$debian_packages
