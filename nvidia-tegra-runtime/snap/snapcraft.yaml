@@ -63,23 +63,23 @@ parts:
         debian_packages=$(find . -name "nvidia-l4t*.deb")
       elif [ -d $L4T_DEB_PACKAGES_PATH ]; then
         debian_packages="$(find $L4T_DEB_PACKAGES_PATH\
-        -name nvidia-l4t-weston_*.deb" -o\
-        -name nvidia-l4t-firmware_*.deb" -o\
-        -name nvidia-l4t-wayland_*.deb" -o\
-        -name nvidia-l4t-libwayland-egl1_*.deb" -o\
-        -name nvidia-l4t-libwayland-client0_*.deb" -o\
-        -name nvidia-l4t-libwayland-cursor0_*.deb" -o\
-        -name nvidia-l4t-libwayland-server0_*.deb" -o\
-        -name nvidia-l4t-nvml_*.deb" -o\
-        -name nvidia-l4t-cuda_*.deb" -o\
-        -name nvidia-l4t-dla-compiler_*.deb" -o\
-        -name nvidia-l4t-graphics-demos_*.deb" -o\
-        -name nvidia-l4t-3d-core_*.deb" -o\
-        -name nvidia-l4t-core_*.deb" -o\
-        -name nvidia-l4t-init_*.deb" -o\
-        -name nvidia-l4t-gbm_*.deb" -o\
-        -name nvidia-l4t-multimedia-utils_*.deb" -o\
-        -name nvidia-l4t-x11_*.deb")"
+        -name "nvidia-l4t-weston_*.deb" -o\
+        -name "nvidia-l4t-firmware_*.deb" -o\
+        -name "nvidia-l4t-wayland_*.deb" -o\
+        -name "nvidia-l4t-libwayland-egl1_*.deb" -o\
+        -name "nvidia-l4t-libwayland-client0_*.deb" -o\
+        -name "nvidia-l4t-libwayland-cursor0_*.deb" -o\
+        -name "nvidia-l4t-libwayland-server0_*.deb" -o\
+        -name "nvidia-l4t-nvml_*.deb" -o\
+        -name "nvidia-l4t-cuda_*.deb" -o\
+        -name "nvidia-l4t-dla-compiler_*.deb" -o\
+        -name "nvidia-l4t-graphics-demos_*.deb" -o\
+        -name "nvidia-l4t-3d-core_*.deb" -o\
+        -name "nvidia-l4t-core_*.deb" -o\
+        -name "nvidia-l4t-init_*.deb" -o\
+        -name "nvidia-l4t-gbm_*.deb" -o\
+        -name "nvidia-l4t-multimedia-utils_*.deb" -o\
+        -name "nvidia-l4t-x11_*.deb")"
       fi
       if [[ ! -z $debian_packages ]]; then
         readarray -t <<<$debian_packages
