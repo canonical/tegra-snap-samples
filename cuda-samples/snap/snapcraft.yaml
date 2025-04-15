@@ -70,12 +70,12 @@ parts:
       touch /opt/nvidia/l4t-packages/.nv-l4t-disable-boot-fw-update-in-preinstall
       L4T_DEB_PACKAGES_PATH=${L4T_DEB_PACKAGES_PATH:="NVIDIA_ARCHIVE"}
       if [ "$L4T_DEB_PACKAGES_PATH" = "NVIDIA_ARCHIVE" ]; then
-        sudo apt-get update
-        sudo apt install --yes nvidia-l4t-core nvidia-l4t-cuda
+        apt update
+        apt install --yes nvidia-l4t-core nvidia-l4t-cuda
       elif [ -d $L4T_DEB_PACKAGES_PATH ]; then
-        sudo apt install -y libegl1 -f
-        sudo dpkg -i $L4T_DEB_PACKAGES_PATH/nvidia-l4t-core_*.deb
-        sudo dpkg -i $L4T_DEB_PACKAGES_PATH/nvidia-l4t-cuda_*.deb
+        apt install --yes libegl1 -f
+        dpkg -i $L4T_DEB_PACKAGES_PATH/nvidia-l4t-core_*.deb
+        dpkg -i $L4T_DEB_PACKAGES_PATH/nvidia-l4t-cuda_*.deb
       fi
       echo '/usr/local/cuda-12.6/compat' | tee -a /etc/ld.so.conf.d/000_cuda.conf
       ldconfig
