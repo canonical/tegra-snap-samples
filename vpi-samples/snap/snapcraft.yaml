@@ -63,7 +63,27 @@ parts:
     override-build: |
       mkdir -p /opt/nvidia/l4t-packages/
       touch /opt/nvidia/l4t-packages/.nv-l4t-disable-boot-fw-update-in-preinstall
-      apt install --yes nvidia-l4t-pva nvidia-l4t-3d-core nvidia-l4t-multimedia
+      L4T_DEB_PACKAGES_PATH=${L4T_DEB_PACKAGES_PATH:="NVIDIA_ARCHIVE"}
+      if [ "$L4T_DEB_PACKAGES_PATH" = "NVIDIA_ARCHIVE" ]; then
+        apt update
+        apt install --yes nvidia-l4t-pva nvidia-l4t-3d-core nvidia-l4t-multimedia
+      elif [ -d $L4T_DEB_PACKAGES_PATH ]; then
+        apt install -y libegl1 nvme-cli efibootmgr bridge-utils libffi7 libasound2 libgles2 -f
+        apt install -y alsa-topology-conf alsa-ucm-conf libasound2-data libdrm-amdgpu1 -f
+        apt install -y libgstreamer-plugins-bad1.0-0 libllvm15 libvulkan1 mesa-vulkan-drivers -f
+        dpkg -i $L4T_DEB_PACKAGES_PATH/nvidia-l4t-core_*.deb
+        dpkg -i $L4T_DEB_PACKAGES_PATH/nvidia-l4t-firmware_*.deb
+        dpkg -i $L4T_DEB_PACKAGES_PATH/nvidia-l4t-init_*.deb
+        dpkg -i $L4T_DEB_PACKAGES_PATH/nvidia-l4t-libwayland-client0_*.deb
+        dpkg -i $L4T_DEB_PACKAGES_PATH/nvidia-l4t-libwayland-server0_*.deb
+        dpkg -i $L4T_DEB_PACKAGES_PATH/nvidia-l4t-nvsci_*.deb
+        dpkg -i $L4T_DEB_PACKAGES_PATH/nvidia-l4t-x11_*.deb
+        dpkg -i $L4T_DEB_PACKAGES_PATH/nvidia-l4t-pva_*.deb
+        dpkg -i $L4T_DEB_PACKAGES_PATH/nvidia-l4t-multimedia-utils_*.deb
+        dpkg -i $L4T_DEB_PACKAGES_PATH/nvidia-l4t-wayland_*.deb
+        dpkg -i $L4T_DEB_PACKAGES_PATH/nvidia-l4t-3d-core_*.deb
+        dpkg -i $L4T_DEB_PACKAGES_PATH/nvidia-l4t-multimedia_*.deb
+      fi
       export LD_LIBRARY_PATH=${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/usr/lib/aarch64-linux-gnu/tegra-egl/
       cd $CRAFT_PART_INSTALL/opt/nvidia/vpi3/samples/
       for f in */CMakeLists.txt ; do pushd $(dirname $f) ; cmake -DOpenCV_DIR=/usr/lib/cmake/opencv4 . ; VERBOSE=1 make ; popd ; done
