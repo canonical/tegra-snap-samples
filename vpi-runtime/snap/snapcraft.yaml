@@ -61,6 +61,7 @@ parts:
       - nvidia-vpi
       - libnvvpi3
       - python3.10-vpi3
+      - libegl1
     override-prime: |
       craftctl default
       rm -fr $CRAFT_PRIME/usr/share/icons
