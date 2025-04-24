@@ -71,8 +71,8 @@ parts:
         apt install -y libegl1 nvme-cli efibootmgr bridge-utils libffi7 libasound2 libgles2 -f
         apt install -y alsa-topology-conf alsa-ucm-conf libasound2-data libdrm-amdgpu1 -f
         apt install -y libgstreamer-plugins-bad1.0-0 libllvm15 libvulkan1 mesa-vulkan-drivers -f
-        dpkg -i $L4T_DEB_PACKAGES_PATH/nvidia-l4t-cuda_*.deb
         dpkg -i $L4T_DEB_PACKAGES_PATH/nvidia-l4t-core_*.deb
+        dpkg -i $L4T_DEB_PACKAGES_PATH/nvidia-l4t-cuda_*.deb
         dpkg -i $L4T_DEB_PACKAGES_PATH/nvidia-l4t-firmware_*.deb
         dpkg -i $L4T_DEB_PACKAGES_PATH/nvidia-l4t-init_*.deb
         dpkg -i $L4T_DEB_PACKAGES_PATH/nvidia-l4t-libwayland-client0_*.deb
