@@ -4,7 +4,7 @@ set -euo pipefail
 SELF="$( cd -- "$(dirname "$0")/.." ; pwd -P )"
 
 ARCH_TRIPLET="aarch64-linux-gnu"
-LD_LIBRARY_PATH=${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}${SELF}/opt/nvidia/vpi3/lib/${ARCH_TRIPLET}:${SELF}/lib/${ARCH_TRIPLET}:${SELF}/usr/lib/${ARCH_TRIPLET}:${SELF}/usr/lib/:${SELF}/usr/lib/${ARCH_TRIPLET}/nvidia
+LD_LIBRARY_PATH=${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}${SELF}/opt/nvidia/vpi3/lib/${ARCH_TRIPLET}:${SELF}/lib/${ARCH_TRIPLET}:${SELF}/usr/lib/${ARCH_TRIPLET}:${SELF}/usr/lib/:${SELF}/usr/lib/${ARCH_TRIPLET}/nvidia:${SELF}/usr/lib/${ARCH_TRIPLET}/tegra-egl
 
 export LD_LIBRARY_PATH
 

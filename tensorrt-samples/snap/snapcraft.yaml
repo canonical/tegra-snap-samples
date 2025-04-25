@@ -56,7 +56,15 @@ parts:
     override-build: |
       mkdir -p /opt/nvidia/l4t-packages/
       touch /opt/nvidia/l4t-packages/.nv-l4t-disable-boot-fw-update-in-preinstall
-      apt install --yes nvidia-l4t-dla-compiler nvidia-l4t-cuda
+      L4T_DEB_PACKAGES_PATH=${L4T_DEB_PACKAGES_PATH:="NVIDIA_ARCHIVE"}
+      if [ "$L4T_DEB_PACKAGES_PATH" = "NVIDIA_ARCHIVE" ]; then
+        apt update
+        apt install --yes nvidia-l4t-dla-compiler nvidia-l4t-cuda
+      elif [ -d $L4T_DEB_PACKAGES_PATH ]; then
+        apt install --yes libegl1 -f
+        dpkg -i $L4T_DEB_PACKAGES_PATH/nvidia-l4t-cuda_*.deb
+        dpkg -i $L4T_DEB_PACKAGES_PATH/nvidia-l4t-dla-compiler_*.deb
+      fi
       echo '/usr/local/cuda-12.6/compat' | tee -a /etc/ld.so.conf.d/000_cuda.conf
       ldconfig
       cd $CRAFT_PART_INSTALL/usr/src/tensorrt/samples

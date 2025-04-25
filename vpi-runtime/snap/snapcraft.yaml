@@ -31,14 +31,38 @@ package-repositories:
 parts:
   vpi-runtime:
     plugin: nil
+    override-stage: |
+      L4T_DEB_PACKAGES_PATH=${L4T_DEB_PACKAGES_PATH:="NVIDIA_ARCHIVE"}
+      if [ "$L4T_DEB_PACKAGES_PATH" = "NVIDIA_ARCHIVE" ]; then
+        apt update
+        apt download nvidia-l4t-core nvidia-l4t-cuda nvidia-l4t-nvsci nvidia-l4t-pva nvidia-l4t-multimedia nvidia-l4t-multimedia-utils nvidia-l4t-3d-core
+        debian_packages=$(find . -name "nvidia-l4t*.deb")
+      elif [ -d $L4T_DEB_PACKAGES_PATH ]; then
+        debian_packages="$(find $L4T_DEB_PACKAGES_PATH\
+        -name "nvidia-l4t-core_*.deb" -o\
+        -name "nvidia-l4t-cuda_*.deb" -o\
+        -name "nvidia-l4t-3d-core_*.deb" -o\
+        -name "nvidia-l4t-nvsci_*.deb" -o\
+        -name "nvidia-l4t-pva_*.deb" -o\
+        -name "nvidia-l4t-multimedia_*.deb" -o\
+        -name "nvidia-l4t-multimedia-utils_*.deb")"
+      fi
+      if [[ ! -z $debian_packages ]]; then
+        readarray -t <<<$debian_packages
+        for f in "${MAPFILE[@]}"
+        do
+          echo "extracting: $f..."
+          dpkg -x $f $CRAFT_PART_INSTALL/
+        done
+      fi
+      craftctl default
     stage-packages:
       - libopencv
       - libopencv-python
       - nvidia-vpi
       - libnvvpi3
       - python3.10-vpi3
-      - nvidia-l4t-multimedia
-      - nvidia-l4t-pva
+      - libegl1
     override-prime: |
       craftctl default
       rm -fr $CRAFT_PRIME/usr/share/icons

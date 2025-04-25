@@ -46,7 +46,7 @@ $ snapcraft
 $ sudo snap install --dangerous ./cuda-samples_12.6_arm64.snap
 $
 $ sudo snap connect cuda-samples:graphics-core22 nvidia-tegra-runtime:graphics-core22
-$ sudo snap connect cuda-samples:tensorrt-libs-cuda-12 cuda-runtime:tensorrt-libs-cuda-12
+$ sudo snap connect cuda-samples:tensorrt-libs-cuda-12 tensorrt-libs:tensorrt-libs-cuda-12
 $ sudo snap connect cuda-samples:system-files
 $ sudo snap connect cuda-samples:hardware-observe
 ```
