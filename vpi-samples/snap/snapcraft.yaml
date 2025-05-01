@@ -91,7 +91,7 @@ parts:
     override-prime: |
       craftctl default
       rm -fr $CRAFT_PRIME/usr/share/icons
-  vpi-wrapper:
+  vpi-wrappers:
     after: [vpi-samples]
     source: .
     plugin: dump
@@ -99,6 +99,7 @@ parts:
       '*': bin/
     prime:
     - bin/vpi-wrapper
+    - bin/graphics-core22-wrapper
 
 apps:
   vpi-sample-01-convolve-2d:
