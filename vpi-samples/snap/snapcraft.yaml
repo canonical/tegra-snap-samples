@@ -14,7 +14,6 @@ plugs:
   graphics-core22:
     interface: content
     target: $SNAP/graphics
-    default-provider: mesa-core22 ## note: expecting the nvidia-tegra-runtime
   vpi3-core22:
     interface: content
     target: $SNAP/vpi
@@ -92,18 +91,7 @@ parts:
     override-prime: |
       craftctl default
       rm -fr $CRAFT_PRIME/usr/share/icons
-  graphics-core22:
-    after: [vpi-samples]
-    source: https://github.com/canonical/gpu-snap.git
-    plugin: dump
-    override-prime: |
-      craftctl default
-      for filelist in /var/lib/dpkg/info/nvidia-*.list ; do for f in $(cat $filelist | awk "/.+/ { print  \"${CRAFT_PRIME}/\" \$0 }") ; do test -f $f && rm $f ; done ; done
-      rm -fr ${CRAFT_PRIME}/lib/firmware
-      ${CRAFT_PART_SRC}/bin/graphics-core22-cleanup mesa-core22 nvidia-core22
-    prime:
-    - bin/graphics-core22-wrapper
-  vpi-wrapper:
+  vpi-wrappers:
     after: [vpi-samples]
     source: .
     plugin: dump
@@ -111,6 +99,7 @@ parts:
       '*': bin/
     prime:
     - bin/vpi-wrapper
+    - bin/graphics-core22-wrapper
 
 apps:
   vpi-sample-01-convolve-2d:
