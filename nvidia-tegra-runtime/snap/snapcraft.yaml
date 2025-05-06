@@ -72,7 +72,6 @@ parts:
         -name "nvidia-l4t-libwayland-server0_*.deb" -o\
         -name "nvidia-l4t-nvml_*.deb" -o\
         -name "nvidia-l4t-cuda_*.deb" -o\
-        -name "nvidia-l4t-dla-compiler_*.deb" -o\
         -name "nvidia-l4t-graphics-demos_*.deb" -o\
         -name "nvidia-l4t-3d-core_*.deb" -o\
         -name "nvidia-l4t-core_*.deb" -o\
@@ -80,6 +79,11 @@ parts:
         -name "nvidia-l4t-gbm_*.deb" -o\
         -name "nvidia-l4t-multimedia-utils_*.deb" -o\
         -name "nvidia-l4t-x11_*.deb")"
+        # nvidia-l4t-dla-compiler is not part of the private set of Nvidia packages,
+        # that's why it is installed through the Nvidia archive.
+        apt update
+        apt download nvidia-l4t-dla-compiler
+        debian_packages="$debian_packages"$'\n'"$(find . -name "nvidia-l4t-dla-compiler*.deb")"
       fi
       if [[ ! -z $debian_packages ]]; then
         readarray -t <<<$debian_packages

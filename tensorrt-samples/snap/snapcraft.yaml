@@ -63,7 +63,9 @@ parts:
       elif [ -d $L4T_DEB_PACKAGES_PATH ]; then
         apt install --yes libegl1 -f
         dpkg -i $L4T_DEB_PACKAGES_PATH/nvidia-l4t-cuda_*.deb
-        dpkg -i $L4T_DEB_PACKAGES_PATH/nvidia-l4t-dla-compiler_*.deb
+        # nvidia-l4t-dla-compiler is not part of the private set of Nvidia packages,
+        # that's why it is installed through the Nvidia archive.
+        apt install --yes nvidia-l4t-dla-compiler
       fi
       echo '/usr/local/cuda-12.6/compat' | tee -a /etc/ld.so.conf.d/000_cuda.conf
       ldconfig
