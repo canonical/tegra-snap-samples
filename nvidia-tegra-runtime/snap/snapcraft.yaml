@@ -59,6 +59,11 @@ parts:
           nvidia-l4t-init \
           nvidia-l4t-gbm \
           nvidia-l4t-multimedia-utils \
+          nvidia-l4t-multimedia \
+          nvidia-l4t-gstreamer \
+          nvidia-l4t-camera \
+          nvidia-l4t-pva \
+          nvidia-l4t-nvsci \
           nvidia-l4t-x11
         debian_packages=$(find . -name "nvidia-l4t*.deb")
       elif [ -d $L4T_DEB_PACKAGES_PATH ]; then
@@ -78,6 +83,11 @@ parts:
         -name "nvidia-l4t-init_*.deb" -o\
         -name "nvidia-l4t-gbm_*.deb" -o\
         -name "nvidia-l4t-multimedia-utils_*.deb" -o\
+        -name "nvidia-l4t-multimedia_*.deb" -o\
+        -name "nvidia-l4t-gstreamer_*.deb" -o\
+        -name "nvidia-l4t-camera_*.deb" -o\
+        -name "nvidia-l4t-pva_*.deb" -o\
+        -name "nvidia-l4t-nvsci_*.deb" -o\
         -name "nvidia-l4t-x11_*.deb")"
         # nvidia-l4t-dla-compiler is not part of the private set of Nvidia packages,
         # that's why it is installed through the Nvidia archive.
