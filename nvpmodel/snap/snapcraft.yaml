@@ -129,6 +129,7 @@ parts:
         done
       fi
       craftctl default
+      sed -i 's/^setup_actmon/#setup_actmon/' $CRAFT_STAGE/etc/systemd/nvpower.sh
     stage-packages:
       - coreutils
       - systemd
