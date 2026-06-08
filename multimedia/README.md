@@ -88,7 +88,7 @@ $ sudo snap run multimedia.gst-launch filesrc \
     filesink location=riverside-camera-av1-reenc.mkv -e
 
 $ sudo snap run multimedia.gst-launch filesrc \
-    location=riverside-camera-av1-reenc.mkv ! matroskademux ! queue ! \
+    location=riverside-camera-av1-reenc.mkv ! matroskademux ! queue ! av1parse ! \
     nvv4l2decoder ! nvv4l2h264enc bitrate=20000000 ! h264parse ! queue ! \
     qtmux name=mux ! filesink location=riverside-camera-h264-reenc.mp4 -e
 
