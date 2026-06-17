@@ -1,33 +1,38 @@
 name: nvidia-tegra-runtime # you probably want to 'snapcraft register <name>'
-base: core22 # the base snap is the execution environment for this snap
-version: '36.5' # just for humans, typically '1.2+git' or '1.3.2'
-summary: NVIDIA Tegra firmware and core files for Jetson and IGX ORIN boards (arm64) # 79 char long summary
+base: core24 # the base snap is the execution environment for this snap
+version: '39.2' # just for humans, typically '1.2+git' or '1.3.2'
+summary: NVIDIA Tegra firmware and core files for Jetson ORIN and THOR boards # 79 char long summary
 description: |
   Install all necessary files to run CUDA toolkit on Ubuntu image
 
 grade: stable # must be 'stable' to release into candidate/stable channels
 confinement: strict # use 'strict' once you have the right plugs and slots
 
+plugs:
+  cuda:
+    interface: content
+    target: $SNAP/usr/lib/cuda-libs
 apps:
   nvidia-smi:
     command: usr/sbin/nvidia-smi
     environment:
-      LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/usr/lib/aarch64-linux-gnu/nvidia/
+      LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/usr/lib/aarch64-linux-gnu/nvidia/:$SNAP/usr/lib/cuda-libs
     plugs:
       - hardware-observe
       - opengl
+      - cuda
 
 package-repositories:
   - type: apt
     components: [main]
-    suites: [r36.5]
+    suites: [r39.2]
     key-id: 3C6D1FF3100C8C3ABB0869C0E6543461A9996195
     key-server: https://repo.download.nvidia.com/jetson/jetson-ota-public.asc
-    url: https://repo.download.nvidia.com/jetson/t234
+    url: https://repo.download.nvidia.com/jetson/som
     architectures: [arm64]
   - type: apt
     components: [main]
-    suites: [r36.5]
+    suites: [r39.2]
     key-id: 3C6D1FF3100C8C3ABB0869C0E6543461A9996195
     key-server: https://repo.download.nvidia.com/jetson/jetson-ota-public.asc
     url: https://repo.download.nvidia.com/jetson/common
@@ -38,62 +43,26 @@ parts:
     # See 'snapcraft plugins'
     plugin: nil
     source: .
-    override-stage: |
-      L4T_DEB_PACKAGES_PATH=${L4T_DEB_PACKAGES_PATH:="NVIDIA_ARCHIVE"}
-      if [ "$L4T_DEB_PACKAGES_PATH" = "NVIDIA_ARCHIVE" ]; then
-        apt update
-        apt download \
-          nvidia-l4t-weston \
-          nvidia-l4t-firmware \
-          nvidia-l4t-wayland \
-          nvidia-l4t-libwayland-egl1 \
-          nvidia-l4t-libwayland-client0 \
-          nvidia-l4t-libwayland-cursor0 \
-          nvidia-l4t-libwayland-server0 \
-          nvidia-l4t-nvml \
-          nvidia-l4t-cuda \
-          nvidia-l4t-dla-compiler \
-          nvidia-l4t-graphics-demos \
-          nvidia-l4t-3d-core \
-          nvidia-l4t-core \
-          nvidia-l4t-init \
-          nvidia-l4t-gbm \
-          nvidia-l4t-multimedia-utils \
-          nvidia-l4t-x11
-        debian_packages=$(find . -name "nvidia-l4t*.deb")
-      elif [ -d $L4T_DEB_PACKAGES_PATH ]; then
-        debian_packages="$(find $L4T_DEB_PACKAGES_PATH\
-        -name "nvidia-l4t-weston_*.deb" -o\
-        -name "nvidia-l4t-firmware_*.deb" -o\
-        -name "nvidia-l4t-wayland_*.deb" -o\
-        -name "nvidia-l4t-libwayland-egl1_*.deb" -o\
-        -name "nvidia-l4t-libwayland-client0_*.deb" -o\
-        -name "nvidia-l4t-libwayland-cursor0_*.deb" -o\
-        -name "nvidia-l4t-libwayland-server0_*.deb" -o\
-        -name "nvidia-l4t-nvml_*.deb" -o\
-        -name "nvidia-l4t-cuda_*.deb" -o\
-        -name "nvidia-l4t-graphics-demos_*.deb" -o\
-        -name "nvidia-l4t-3d-core_*.deb" -o\
-        -name "nvidia-l4t-core_*.deb" -o\
-        -name "nvidia-l4t-init_*.deb" -o\
-        -name "nvidia-l4t-gbm_*.deb" -o\
-        -name "nvidia-l4t-multimedia-utils_*.deb" -o\
-        -name "nvidia-l4t-x11_*.deb")"
-        # nvidia-l4t-dla-compiler is not part of the private set of Nvidia packages,
-        # that's why it is installed through the Nvidia archive.
-        apt update
-        apt download nvidia-l4t-dla-compiler
-        debian_packages="$debian_packages"$'\n'"$(find . -name "nvidia-l4t-dla-compiler*.deb")"
-      fi
-      if [[ ! -z $debian_packages ]]; then
-        readarray -t <<<$debian_packages
-        for f in "${MAPFILE[@]}"
-        do
-          echo "extracting: $f..."
-          dpkg -x $f $CRAFT_PART_INSTALL/
-        done
-      fi
-      craftctl default
+    stage-packages:
+      - nvidia-l4t-3d-core
+      - nvidia-l4t-adaruntime
+      - nvidia-l4t-core
+      - nvidia-l4t-cuda
+      - nvidia-l4t-cuda-nvgpu
+      - nvidia-l4t-cuda-openrm
+      - nvidia-l4t-cuda-utils
+      - nvidia-l4t-firmware
+      - nvidia-l4t-firmware-nvgpu
+      - nvidia-l4t-firmware-openrm
+      - nvidia-l4t-gbm
+      - nvidia-l4t-graphics-demos
+      - nvidia-l4t-init
+      - nvidia-l4t-libvulkan
+      - nvidia-l4t-multimedia-utils
+      - nvidia-l4t-nvml
+      - nvidia-l4t-wayland
+      - nvidia-l4t-weston
+      - nvidia-l4t-x11
 
   scripts:
     plugin: dump
@@ -103,3 +72,9 @@ slots:
   graphics-core22:
     interface: content
     read: [$SNAP]
+  cuda-openrm:
+    interface: content
+    read: [$SNAP/opt/nvidia/l4t-gpu-libs/openrm]
+  cuda-nvgpu:
+    interface: content
+    read: [$SNAP/opt/nvidia/l4t-gpu-libs/nvgpu]
