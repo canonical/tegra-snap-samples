@@ -1,6 +1,6 @@
 name: tensorrt-libs # you probably want to 'snapcraft register <name>'
-base: core22 # the base snap is the execution environment for this snap
-version: '10.3.0.30-1+cuda12.5' # just for humans, typically '1.2+git' or '1.3.2'
+base: core24 # the base snap is the execution environment for this snap
+version: '11.0.0.114-1+cuda13.2' # just for humans, typically '1.2+git' or '1.3.2'
 summary: TensorRT and cuda runtime libraries # 79 char long summary
 description: |
   This snap contains the TensorRT runtime libraries contained in the deb
@@ -14,14 +14,14 @@ confinement: strict # use 'strict' once you have the right plugs and slots
 package-repositories:
   - type: apt
     components: [main]
-    suites: [r36.5]
+    suites: [r39.2]
     key-id: 3C6D1FF3100C8C3ABB0869C0E6543461A9996195
     key-server: https://repo.download.nvidia.com/jetson/jetson-ota-public.asc
-    url: https://repo.download.nvidia.com/jetson/t234
+    url: https://repo.download.nvidia.com/jetson/som
     architectures: [arm64]
   - type: apt
     components: [main]
-    suites: [r36.5]
+    suites: [r39.2]
     key-id: 3C6D1FF3100C8C3ABB0869C0E6543461A9996195
     key-server: https://repo.download.nvidia.com/jetson/jetson-ota-public.asc
     url: https://repo.download.nvidia.com/jetson/common
@@ -31,16 +31,15 @@ parts:
   tensorrt-libs:
     plugin: nil
     stage-packages:
-      - libnvinfer-bin
-      - libnvinfer-samples
-      - cuda-12-6
+      - tensorrt
+      - cuda-13-2
 
   scripts:
     plugin: dump
     source: scripts
 
 slots:
-  tensorrt-libs-cuda-12:
+  tensorrt-libs-cuda-13:
     interface: content
     read:
       - /

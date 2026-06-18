@@ -4,7 +4,7 @@ set -euo pipefail
 SELF="$( cd -- "$(dirname "$0")/.." ; pwd -P )"
 
 ARCH_TRIPLET="aarch64-linux-gnu"
-LD_LIBRARY_PATH=${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}${SELF}/lib/${ARCH_TRIPLET}:${SELF}/usr/lib/${ARCH_TRIPLET}:${SELF}/usr/local/cuda-12.6/targets/aarch64-linux/lib:${SELF}/usr/local/cuda-12.6/compat
+LD_LIBRARY_PATH=${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}${SELF}/lib/${ARCH_TRIPLET}:${SELF}/usr/lib/${ARCH_TRIPLET}:${SELF}/usr/local/cuda-13.2/targets/sbsa-linux/lib
 
 export LD_LIBRARY_PATH
 

@@ -1,25 +1,25 @@
 name: cuda-samples # you probably want to 'snapcraft register <name>'
-base: core22 # the base snap is the execution environment for this snap
-version: '12.6' # just for humans, typically '1.2+git' or '1.3.2'
+base: core24 # the base snap is the execution environment for this snap
+version: '13.2' # just for humans, typically '1.2+git' or '1.3.2'
 summary: Cuda sample applications provided by nvidia # 79 char long summary
 description: |
   This snap packages the cuda sample applications in order to test the
   behaviour of the GPU
 
 grade: devel # must be 'stable' to release into candidate/stable channels
-confinement: strict # use 'strict' once you have the right plugs and slots
+confinement: devmode # use 'strict' once you have the right plugs and slots
 
 package-repositories:
   - type: apt
     components: [main]
-    suites: [r36.5]
+    suites: [r39.2]
     key-id: 3C6D1FF3100C8C3ABB0869C0E6543461A9996195
     key-server: https://repo.download.nvidia.com/jetson/jetson-ota-public.asc
-    url: https://repo.download.nvidia.com/jetson/t234
+    url: https://repo.download.nvidia.com/jetson/som
     architectures: [arm64]
   - type: apt
     components: [main]
-    suites: [r36.5]
+    suites: [r39.2]
     key-id: 3C6D1FF3100C8C3ABB0869C0E6543461A9996195
     key-server: https://repo.download.nvidia.com/jetson/jetson-ota-public.asc
     url: https://repo.download.nvidia.com/jetson/common
@@ -31,7 +31,7 @@ plugs:
   graphics-core22:
     interface: content
     target: $SNAP/graphics
-  tensorrt-libs-cuda-12:
+  tensorrt-libs-cuda-13:
     interface: content
     target: $SNAP/tensorrt-libs
   system-files:
@@ -57,30 +57,35 @@ parts:
     plugin: nil
     build-packages:
       - initramfs-tools
-      - cuda-12-6
+      - cuda-13-2
       - cmake
+      - nvidia-l4t-core
+      - nvidia-l4t-cuda
     stage-packages:
       - libgomp1
     source: https://github.com/NVIDIA/cuda-samples.git
     source-type: git
-    source-tag: v12.5
+    source-tag: v13.2
     override-build: |
       set -x
-      mkdir -p /opt/nvidia/l4t-packages/
-      touch /opt/nvidia/l4t-packages/.nv-l4t-disable-boot-fw-update-in-preinstall
-      L4T_DEB_PACKAGES_PATH=${L4T_DEB_PACKAGES_PATH:="NVIDIA_ARCHIVE"}
-      if [ "$L4T_DEB_PACKAGES_PATH" = "NVIDIA_ARCHIVE" ]; then
-        apt update
-        apt install --yes nvidia-l4t-core nvidia-l4t-cuda
-      elif [ -d $L4T_DEB_PACKAGES_PATH ]; then
-        apt install --yes libegl1 -f
-        dpkg -i $L4T_DEB_PACKAGES_PATH/nvidia-l4t-core_*.deb
-        dpkg -i $L4T_DEB_PACKAGES_PATH/nvidia-l4t-cuda_*.deb
-      fi
-      echo '/usr/local/cuda-12.6/compat' | tee -a /etc/ld.so.conf.d/000_cuda.conf
+      # mkdir -p /opt/nvidia/l4t-packages/
+      # touch /opt/nvidia/l4t-packages/.nv-l4t-disable-boot-fw-update-in-preinstall
+      # L4T_DEB_PACKAGES_PATH=${L4T_DEB_PACKAGES_PATH:="NVIDIA_ARCHIVE"}
+      # if [ "$L4T_DEB_PACKAGES_PATH" = "NVIDIA_ARCHIVE" ]; then
+      #   apt update
+      #   apt install --yes nvidia-l4t-core nvidia-l4t-cuda
+      # elif [ -d $L4T_DEB_PACKAGES_PATH ]; then
+      #   apt install --yes libegl1 -f
+      #   dpkg -i $L4T_DEB_PACKAGES_PATH/nvidia-l4t-core_*.deb
+      #   dpkg -i $L4T_DEB_PACKAGES_PATH/nvidia-l4t-cuda_*.deb
+      # fi
+      echo '/usr/local/cuda-13.2/compat' | tee -a /etc/ld.so.conf.d/000_cuda.conf
       ldconfig
       mkdir -p $CRAFT_PART_INSTALL/usr/bin
       mkdir -p $CRAFT_PART_INSTALL/opt/cuda-samples
+      # export PATH=$PATH:/usr/local/cuda-13.2/bin
+      cmake -DCMAKE_CUDA_COMPILER=/usr/local/cuda-13.2/bin/nvcc \
+            -DCMAKE_CUDA_ARCHITECTURES=native .
       make -j4 -C $CRAFT_PART_BUILD/
       cp -ar $CRAFT_PART_BUILD/Samples $CRAFT_PART_BUILD/Common $CRAFT_PART_INSTALL/opt/cuda-samples
       cd $CRAFT_PART_INSTALL/opt
