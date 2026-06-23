@@ -28,6 +28,7 @@ plugs:
   hardware-observe:
   opengl:
   microstack-support:
+  network-bind:
   graphics-core22:
     interface: content
     target: $SNAP/graphics
@@ -67,9 +68,15 @@ parts:
     build-packages:
       - initramfs-tools
       - cuda-13-2
-      - tensorrt
+        # - tensorrt
       - unzip
       - wget
+      # for debugging
+      - vim
+        # stage-packages:
+        #   - cuda-13-2
+        #   - tensorrt
+
         # - python3-virtualenv
         # - python3-pip
         #- libnvinfer-bin
@@ -103,10 +110,39 @@ parts:
       # pip install --upgrade cmake
       # Re-scan the system with the new Cmake
       # hash -r && cmake --version
+      wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/sbsa/cuda-keyring_1.1-1_all.deb
+      dpkg -i cuda-keyring_1.1-1_all.deb
+
+      apt update
+      TENSORRT_VERSION=11.0.0.114-1+cuda13.2
+      apt install -y tensorrt=$TENSORRT_VERSION \
+                     libnvinfer11=$TENSORRT_VERSION \
+                     libnvinfer-plugin11=$TENSORRT_VERSION \
+                     libnvinfer-vc-plugin11=$TENSORRT_VERSION \
+                     libnvinfer-lean11=$TENSORRT_VERSION \
+                     libnvinfer-dispatch11=$TENSORRT_VERSION \
+                     libnvonnxparsers11=$TENSORRT_VERSION \
+                     libnvinfer-bin=$TENSORRT_VERSION \
+                     libnvinfer-dev=$TENSORRT_VERSION \
+                     libnvinfer-lean-dev=$TENSORRT_VERSION \
+                     libnvinfer-plugin-dev=$TENSORRT_VERSION \
+                     libnvinfer-vc-plugin-dev=$TENSORRT_VERSION \
+                     libnvinfer-dispatch-dev=$TENSORRT_VERSION \
+                     libnvonnxparsers-dev=$TENSORRT_VERSION \
+                     python3-libnvinfer-dev=$TENSORRT_VERSION \
+                     libnvinfer-headers-python-plugin-dev=$TENSORRT_VERSION \
+                     libnvinfer-headers-dev=$TENSORRT_VERSION \
+                     libnvinfer-safe-headers-dev=$TENSORRT_VERSION \
+                     libnvinfer-headers-plugin-dev=$TENSORRT_VERSION \
+                     python3-libnvinfer=$TENSORRT_VERSION \
+                     python3-libnvinfer-lean=$TENSORRT_VERSION \
+                     python3-libnvinfer-dispatch=$TENSORRT_VERSION
+
       mkdir build
       cd build
       cmake .. \
           -DCMAKE_CUDA_COMPILER=/usr/local/cuda-13.2/bin/nvcc  \
+          -DCMAKE_BUILD_TYPE=Debug \
           -DTRT_LIB_DIR=/usr/lib/aarch64-linux-gnu \
           -DTRT_OUT_DIR=`pwd`/bin \
           -DBUILD_SAMPLES=ON \
@@ -140,6 +176,7 @@ parts:
     override-prime: |
       mkdir -p $CRAFT_PRIME/usr/src
       cp -r $CRAFT_STAGE/usr/src/tensorrt $CRAFT_PRIME/usr/src
+      craftctl default
 
   tensorrt-samples-list:
     plugin: dump

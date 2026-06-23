@@ -30,9 +30,44 @@ package-repositories:
 parts:
   tensorrt-libs:
     plugin: nil
+    build-packages:
+      - wget
     stage-packages:
-      - tensorrt
       - cuda-13-2
+    #   - tensorrt=11.0.0.114-1+cuda13.2
+    override-stage: |
+      wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/sbsa/cuda-keyring_1.1-1_all.deb
+      dpkg -i cuda-keyring_1.1-1_all.deb
+
+      apt update
+      TENSORRT_VERSION=11.0.0.114-1+cuda13.2
+      apt install --download-only -y tensorrt=$TENSORRT_VERSION \
+                                     libnvinfer11=$TENSORRT_VERSION \
+                                     libnvinfer-plugin11=$TENSORRT_VERSION \
+                                     libnvinfer-vc-plugin11=$TENSORRT_VERSION \
+                                     libnvinfer-lean11=$TENSORRT_VERSION \
+                                     libnvinfer-dispatch11=$TENSORRT_VERSION \
+                                     libnvonnxparsers11=$TENSORRT_VERSION \
+                                     libnvinfer-bin=$TENSORRT_VERSION \
+                                     libnvinfer-dev=$TENSORRT_VERSION \
+                                     libnvinfer-lean-dev=$TENSORRT_VERSION \
+                                     libnvinfer-plugin-dev=$TENSORRT_VERSION \
+                                     libnvinfer-vc-plugin-dev=$TENSORRT_VERSION \
+                                     libnvinfer-dispatch-dev=$TENSORRT_VERSION \
+                                     libnvonnxparsers-dev=$TENSORRT_VERSION \
+                                     python3-libnvinfer-dev=$TENSORRT_VERSION \
+                                     libnvinfer-headers-python-plugin-dev=$TENSORRT_VERSION \
+                                     libnvinfer-headers-dev=$TENSORRT_VERSION \
+                                     libnvinfer-safe-headers-dev=$TENSORRT_VERSION \
+                                     libnvinfer-headers-plugin-dev=$TENSORRT_VERSION \
+                                     python3-libnvinfer=$TENSORRT_VERSION \
+                                     python3-libnvinfer-lean=$TENSORRT_VERSION \
+                                     python3-libnvinfer-dispatch=$TENSORRT_VERSION
+
+      for f in /var/cache/apt/archives/*.deb; do
+        dpkg -x $f $CRAFT_PART_INSTALL/ 
+      done
+      craftctl default
 
   scripts:
     plugin: dump
