@@ -155,7 +155,7 @@ parts:
       cp -ar bin/ $CRAFT_PART_INSTALL/usr/src/tensorrt
 
       echo "Fetching tensorrt_sample_data URL"
-      if ! wget -q https://raw.githubusercontent.com/NVIDIA/TensorRT/main/samples/README.md; then
+      if ! wget -q https://raw.githubusercontent.com/NVIDIA/TensorRT/release/11.0/samples/README.md; then
         echo "Error: failed to fetch the tensorrt_sample_data URL"
         exit 1
       fi
