@@ -8,7 +8,7 @@ TARGET_DIR=$(dirname $TARGET)
 
 shift 1
 
-export LD_LIBRARY_PATH=$SNAP/graphics/opt/nvidia/l4t-gpu-libs/openrm:$LD_LIBRARY_PATH
+# export LD_LIBRARY_PATH=$SNAP/graphics/opt/nvidia/l4t-gpu-libs/openrm:$LD_LIBRARY_PATH
 
 EXEC=$(basename $CMD)
 
