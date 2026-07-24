@@ -113,3 +113,6 @@ slots:
   graphics-core22:
     interface: content
     read: [$SNAP]
+  gpu-2404:
+    interface: content
+    read: [$SNAP]

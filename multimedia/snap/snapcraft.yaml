@@ -35,9 +35,9 @@ plugs:
   tegra-camera-plug:
     interface: custom-device
     custom-device: tegra-camera
-  graphics-core22:
+  gpu-2404:
     interface: content
-    target: $SNAP/graphics
+    target: $SNAP/gpu-2404
   nvcam-settings:
     interface: system-files
     write:
@@ -80,16 +80,16 @@ apps:
     command-chain: [bin/wrapper_local]
     command: usr/bin/unzip
   nvargus-nvraw:
-    command-chain: [bin/graphics-core22-wrapper, bin/wrapper_local]
+    command-chain: [bin/gpu-2404-wrapper, bin/wrapper_local]
     command: usr/sbin/nvargus_nvraw
   v4l2-ctl:
     command-chain: [bin/wrapper_local]
     command: usr/bin/v4l2-ctl
   gst-launch:
-    command-chain: [bin/graphics-core22-wrapper, bin/wrapper_local]
+    command-chain: [bin/gpu-2404-wrapper, bin/wrapper_local]
     command: usr/bin/gst-launch-1.0
   nvargus-daemon:
-    command-chain: [bin/graphics-core22-wrapper, bin/wrapper_local]
+    command-chain: [bin/gpu-2404-wrapper, bin/wrapper_local]
     command: usr/sbin/nvargus-daemon
     daemon: simple
     restart-condition: on-failure

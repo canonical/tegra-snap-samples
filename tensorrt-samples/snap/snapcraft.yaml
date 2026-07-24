@@ -29,9 +29,9 @@ plugs:
   opengl:
   microstack-support:
   network-bind:
-  graphics-core22:
+  gpu-2404:
     interface: content
-    target: $SNAP/graphics
+    target: $SNAP/gpu-2404
   tensorrt-libs-cuda-13:
     interface: content
     target: $SNAP/tensorrt-libs
@@ -39,7 +39,7 @@ plugs:
 apps:
   tensorrt-samples:
     command-chain:
-      - bin/graphics-core22-wrapper
+      - bin/gpu-2404-wrapper
       - bin/tensorrt-libs-wrapper
     command: bin/execute_sample.sh
 

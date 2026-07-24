@@ -25,9 +25,9 @@ package-repositories:
     architectures: [arm64]
 
 plugs:
-  graphics-core22:
+  gpu-2404:
     interface: content
-    target: $SNAP/graphics
+    target: $SNAP/gpu-2404
   tensorrt-libs-cuda-13:
     interface: content
     target: $SNAP/tensorrt-libs
@@ -38,16 +38,16 @@ plugs:
 
 apps:
   conv-sample:
-    command-chain: [bin/graphics-core22-wrapper, bin/tensorrt-libs-wrapper, bin/wrapper_local]
+    command-chain: [bin/gpu-2404-wrapper, bin/tensorrt-libs-wrapper, bin/wrapper_local]
     command: bin/execute_from_target_dir.sh run_conv_sample.sh
   mnist-cudnn-sample:
-    command-chain: [bin/graphics-core22-wrapper, bin/tensorrt-libs-wrapper, bin/wrapper_local]
+    command-chain: [bin/gpu-2404-wrapper, bin/tensorrt-libs-wrapper, bin/wrapper_local]
     command: bin/execute_from_target_dir.sh mnistCUDNN
   rnn-sample:
-    command-chain: [bin/graphics-core22-wrapper, bin/tensorrt-libs-wrapper, bin/wrapper_local]
+    command-chain: [bin/gpu-2404-wrapper, bin/tensorrt-libs-wrapper, bin/wrapper_local]
     command: bin/execute_from_target_dir.sh RNN_v8.0
   multi-head-attention-sample:
-    command-chain: [bin/graphics-core22-wrapper, bin/tensorrt-libs-wrapper, bin/wrapper_local]
+    command-chain: [bin/gpu-2404-wrapper, bin/tensorrt-libs-wrapper, bin/wrapper_local]
     command: bin/execute_from_target_dir.sh run_ref.sh
 
 parts:
