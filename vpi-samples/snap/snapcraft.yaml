@@ -79,12 +79,16 @@ parts:
       if [ "$L4T_DEB_PACKAGES_PATH" = "NVIDIA_ARCHIVE" ]; then
         apt update
         apt install --yes nvidia-l4t-cuda nvidia-l4t-pva nvidia-l4t-3d-core nvidia-l4t-multimedia nvidia-l4t-multimedia-utils nvidia-l4t-jetson-multimedia-api
+        # just needed for linking, doesn't matter if being built on Thor or not
+        apt install --yes nvidia-l4t-cuda-openrm
       elif [ -d $L4T_DEB_PACKAGES_PATH ]; then
         apt install -y libegl1 nvme-cli efibootmgr bridge-utils libffi7 libasound2 libgles2 -f
         apt install -y alsa-topology-conf alsa-ucm-conf libasound2-data libdrm-amdgpu1 -f
         apt install -y libgstreamer-plugins-bad1.0-0 libllvm15 libvulkan1 mesa-vulkan-drivers -f
         dpkg -i $L4T_DEB_PACKAGES_PATH/nvidia-l4t-core_*.deb
         dpkg -i $L4T_DEB_PACKAGES_PATH/nvidia-l4t-cuda_*.deb
+        # just needed for linking
+        dpkg -i $L4T_DEB_PACKAGES_PATH/nvidia-l4t-cuda-openrm_*.deb
         dpkg -i $L4T_DEB_PACKAGES_PATH/nvidia-l4t-firmware_*.deb
         dpkg -i $L4T_DEB_PACKAGES_PATH/nvidia-l4t-init_*.deb
         dpkg -i $L4T_DEB_PACKAGES_PATH/nvidia-l4t-libwayland-client0_*.deb
@@ -104,7 +108,7 @@ parts:
       unset LD_LIBRARY_PATH
       cd $CRAFT_PART_INSTALL/opt/nvidia/vpi4/samples/
       CMAKE_OPTS="-DOpenCV_DIR=/usr/lib/cmake/opencv4 -DNvBuffer_INCLUDE_DIR=/usr/src/jetson_multimedia_api/include -DNvSci_INCLUDE_DIR=/usr/src/jetson_multimedia_api/include -DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc"
-      for f in */CMakeLists.txt ; do pushd $(dirname $f) ; cmake $CMAKE_OPTS . && VERBOSE=1 make -j 2 || echo "Skipping $(dirname $f) - build failed" ; popd ; done
+      for f in */CMakeLists.txt ; do pushd $(dirname $f) ; cmake $CMAKE_OPTS . && LD_LIBRARY_PATH=/opt/nvidia/l4t-gpu-libs/openrm VERBOSE=1 make -j 2 || echo "Skipping $(dirname $f) - build failed" ; popd ; done
       for f in */CMakeLists.txt ; do pushd $(dirname $f) ; rm -fr CMakeFiles ; popd ; done
     override-prime: |
       craftctl default
