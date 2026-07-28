@@ -6,25 +6,26 @@ version: '1.0'
 confinement: strict
 grade: stable
 
-base: core22
+base: core24
 
 package-repositories:
   - type: apt
     components: [main]
-    suites: [r36.5]
+    suites: [r39.2]
     key-id: 3C6D1FF3100C8C3ABB0869C0E6543461A9996195
     key-server: https://repo.download.nvidia.com/jetson/jetson-ota-public.asc
-    url: https://repo.download.nvidia.com/jetson/t234
+    url: https://repo.download.nvidia.com/jetson/som
     architectures: [arm64]
   - type: apt
     components: [main]
-    suites: [r36.5]
+    suites: [r39.2]
     key-id: 3C6D1FF3100C8C3ABB0869C0E6543461A9996195
     key-server: https://repo.download.nvidia.com/jetson/jetson-ota-public.asc
     url: https://repo.download.nvidia.com/jetson/common
     architectures: [arm64]
 
 plugs:
+  system-observe:
   shutdown:
   dbus-consumer:
     interface: dbus

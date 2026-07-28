@@ -6,19 +6,19 @@ version: '1.0'
 confinement: strict
 grade: stable
 
-base: core22
+base: core24
 
 package-repositories:
   - type: apt
     components: [main]
-    suites: [r36.5]
+    suites: [r39.2]
     key-id: 3C6D1FF3100C8C3ABB0869C0E6543461A9996195
     key-server: https://repo.download.nvidia.com/jetson/jetson-ota-public.asc
-    url: https://repo.download.nvidia.com/jetson/t234
+    url: https://repo.download.nvidia.com/jetson/som
     architectures: [arm64]
   - type: apt
     components: [main]
-    suites: [r36.5]
+    suites: [r39.2]
     key-id: 3C6D1FF3100C8C3ABB0869C0E6543461A9996195
     key-server: https://repo.download.nvidia.com/jetson/jetson-ota-public.asc
     url: https://repo.download.nvidia.com/jetson/common
@@ -35,6 +35,13 @@ plugs:
   tegra-camera-plug:
     interface: custom-device
     custom-device: tegra-camera
+  graphics-core22:
+    interface: content
+    target: $SNAP/graphics
+  nvcam-settings:
+    interface: system-files
+    write:
+      - /var/nvidia/nvcam/settings
 
 slots:
   tegra-camera-slot:
@@ -48,6 +55,8 @@ slots:
       - /dev/v4l2-nvdec
 
 layout:
+  /var/nvidia/nvcam:
+    bind: $SNAP/var/nvidia/nvcam
   /usr/lib/aarch64-linux-gnu/nvidia:
     bind: $SNAP/usr/lib/aarch64-linux-gnu/nvidia
   /usr/lib/aarch64-linux-gnu/tegra-egl:
@@ -71,16 +80,16 @@ apps:
     command-chain: [bin/wrapper_local]
     command: usr/bin/unzip
   nvargus-nvraw:
-    command-chain: [bin/wrapper_local]
+    command-chain: [bin/graphics-core22-wrapper, bin/wrapper_local]
     command: usr/sbin/nvargus_nvraw
   v4l2-ctl:
     command-chain: [bin/wrapper_local]
     command: usr/bin/v4l2-ctl
   gst-launch:
-    command-chain: [bin/wrapper_local]
+    command-chain: [bin/graphics-core22-wrapper, bin/wrapper_local]
     command: usr/bin/gst-launch-1.0
   nvargus-daemon:
-    command-chain: [bin/wrapper_local]
+    command-chain: [bin/graphics-core22-wrapper, bin/wrapper_local]
     command: usr/sbin/nvargus-daemon
     daemon: simple
     restart-condition: on-failure
@@ -93,7 +102,8 @@ parts:
       if [ "$L4T_DEB_PACKAGES_PATH" = "NVIDIA_ARCHIVE" ]; then
         apt update
         apt download nvidia-l4t-camera nvidia-l4t-gstreamer nvidia-l4t-3d-core nvidia-l4t-multimedia
-        apt download nvidia-l4t-core nvidia-l4t-multimedia-utils nvidia-l4t-cuda nvidia-l4t-nvsci
+        apt download nvidia-l4t-core nvidia-l4t-multimedia-utils nvidia-l4t-nvsci
+        apt download nvidia-l4t-multimedia-nvgpu nvidia-l4t-multimedia-openrm
         debian_packages=$(find . -name "nvidia-l4t*.deb")
       elif [ -d $L4T_DEB_PACKAGES_PATH ]; then
         debian_packages="$(find $L4T_DEB_PACKAGES_PATH\
@@ -102,8 +112,9 @@ parts:
         -name "nvidia-l4t-gstreamer_*.deb" -o\
         -name "nvidia-l4t-3d-core_*.deb" -o\
         -name "nvidia-l4t-nvsci_*.deb" -o\
-        -name "nvidia-l4t-cuda_*.deb" -o\
         -name "nvidia-l4t-multimedia-utils_*.deb" -o\
+        -name "nvidia-l4t-multimedia-nvgpu_*.deb" -o\
+        -name "nvidia-l4t-multimedia-openrm_*.deb" -o\
         -name "nvidia-l4t-multimedia_*.deb")"
       fi
       if [[ ! -z $debian_packages ]]; then
