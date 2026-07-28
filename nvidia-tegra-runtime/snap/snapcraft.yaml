@@ -14,7 +14,7 @@ apps:
       - bin/graphics-core22-provider-wrapper
     command: usr/sbin/nvidia-smi
     environment:
-      LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/usr/lib/aarch64-linux-gnu/nvidia/
+      LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/usr/lib/aarch64-linux-gnu/nvidia/:$SNAP/usr/lib/l4t-gpu-libs
     plugs:
       - hardware-observe
       - opengl
