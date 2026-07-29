@@ -18,7 +18,7 @@ plugs:
     interface: content
     target: $SNAP/vpi
   system-files:
-    write:
+    read:
       - /proc/driver/nvidia/gpus
 
 package-repositories:
