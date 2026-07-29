@@ -40,13 +40,16 @@ package-repositories:
 parts:
   vpi-headers:
     plugin: nil
-    source: headers/
+    source: https://developer.nvidia.com/downloads/embedded/L4T/r39_Release_v2.0/sources/public_sources.tbz2
+    source-type: tar
     override-pull: |
       craftctl default
-      mkdir -p /usr/lib/include
-      cp *.h /usr/lib/include/
+      mkdir -p $CRAFT_PART_SRC/nvsci_headers
+      tar -xf $CRAFT_PART_SRC/source/nvsci_headers.tbz2 -C $CRAFT_PART_SRC/nvsci_headers
+      cp $CRAFT_PART_SRC/nvsci_headers/*.h /usr/include/
     prime:
       - -*
+
 
   vpi-samples:
     after: [vpi-headers]
