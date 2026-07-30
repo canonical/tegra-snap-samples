@@ -1,6 +1,6 @@
 name: tensorrt-samples # you probably want to 'snapcraft register <name>'
 base: core24 # the base snap is the execution environment for this snap
-version: '11.0.0.114-1+cuda13.2' # just for humans, typically '1.2+git' or '1.3.2'
+version: '10.16.2.10-1+cuda13.2' # just for humans, typically '1.2+git' or '1.3.2'
 summary: Tensorrt sample applications # 79 char long summary
 description: |
   Tensorrt sample applications to test the GPU
@@ -58,7 +58,7 @@ parts:
     plugin: nil
     source: https://github.com/NVIDIA/TensorRT.git
     source-type: git
-    source-tag: release/11.0
+    source-tag: release/10.16
     build-snaps:
       - cmake
     build-packages:
@@ -66,35 +66,11 @@ parts:
       - cuda-13-2
       - unzip
       - wget
+      - aptitude
         #- libnvinfer-bin
     override-build: |
-      wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/sbsa/cuda-keyring_1.1-1_all.deb
-      dpkg -i cuda-keyring_1.1-1_all.deb
-
-      apt update
-      TENSORRT_VERSION=11.0.0.114-1+cuda13.2
-      apt install -y tensorrt=$TENSORRT_VERSION \
-                     libnvinfer11=$TENSORRT_VERSION \
-                     libnvinfer-plugin11=$TENSORRT_VERSION \
-                     libnvinfer-vc-plugin11=$TENSORRT_VERSION \
-                     libnvinfer-lean11=$TENSORRT_VERSION \
-                     libnvinfer-dispatch11=$TENSORRT_VERSION \
-                     libnvonnxparsers11=$TENSORRT_VERSION \
-                     libnvinfer-bin=$TENSORRT_VERSION \
-                     libnvinfer-dev=$TENSORRT_VERSION \
-                     libnvinfer-lean-dev=$TENSORRT_VERSION \
-                     libnvinfer-plugin-dev=$TENSORRT_VERSION \
-                     libnvinfer-vc-plugin-dev=$TENSORRT_VERSION \
-                     libnvinfer-dispatch-dev=$TENSORRT_VERSION \
-                     libnvonnxparsers-dev=$TENSORRT_VERSION \
-                     python3-libnvinfer-dev=$TENSORRT_VERSION \
-                     libnvinfer-headers-python-plugin-dev=$TENSORRT_VERSION \
-                     libnvinfer-headers-dev=$TENSORRT_VERSION \
-                     libnvinfer-safe-headers-dev=$TENSORRT_VERSION \
-                     libnvinfer-headers-plugin-dev=$TENSORRT_VERSION \
-                     python3-libnvinfer=$TENSORRT_VERSION \
-                     python3-libnvinfer-lean=$TENSORRT_VERSION \
-                     python3-libnvinfer-dispatch=$TENSORRT_VERSION
+      TENSORRT_VERSION=10.16.2.10-1+cuda13.2
+      aptitude install -y -o "Aptitude::ProblemResolver::Hints::=reject tensorrt :UNINST" tensorrt=$TENSORRT_VERSION
 
       mkdir build
       cd build
