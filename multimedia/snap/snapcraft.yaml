@@ -2,7 +2,7 @@ name: multimedia
 summary: Sample multimedia apps for Tegra
 description: |
   Collection of multimedia use-cases for Tegra platforms
-version: '1.0'
+version: '39.2'
 confinement: strict
 grade: stable
 

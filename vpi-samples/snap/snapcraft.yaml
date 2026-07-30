@@ -1,6 +1,6 @@
 name: vpi-samples
 base: core24
-version: 3.2.4-1
+version: 4.1.3
 summary: NVIDIA VPI samples
 description: |
   This snap contains the VPI samples.

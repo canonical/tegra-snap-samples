@@ -2,7 +2,7 @@ name: cudnn-samples
 summary: Sample cudnn snap for Tegra
 description: |
   Collection of cudnn use-cases for Tegra platforms 
-version: '1.0'
+version: '9.25.0.15-1'
 confinement: strict
 grade: stable
 

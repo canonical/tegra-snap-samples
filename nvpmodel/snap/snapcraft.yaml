@@ -2,7 +2,7 @@ name: nvpmodel
 summary: Sample nvpmodel apps for Tegra
 description: |
   Collection of nvpmodel use-cases for Tegra platforms
-version: '1.0'
+version: '39.2'
 confinement: strict
 grade: stable
 
