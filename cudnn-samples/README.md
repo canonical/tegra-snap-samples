@@ -1,10 +1,10 @@
 # cuDNN samples
 
-This snap packages software coming from the `libcudnn9-samples` .deb package from [nvidia's software repository](https://repo.download.nvidia.com/jetson/).
+This snap packages software coming from the `libcudnn9-samples` .deb package from [nvidia's sbsa software repository](https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/sbsa).
 
-For compilation, we need cuda and cudnn libraries. We stage the `nvidia-l4t-cuda` L4T package directly and implement the `tensorrt-libs-cuda-12` content interface provided by the [tensorrt-libs snap](../tensorrt-libs/) for the necessary cuda and tensorrt runtime libraries. We also need to plug into the hardware-observe and opengl interfaces for the necessary hardware access.
+For compilation, we need cuda and cudnn libraries. We stage the `nvidia-l4t-cuda` L4T package directly and implement the `tensorrt-libs-cuda-13` content interface provided by the [tensorrt-libs snap](../tensorrt-libs/) for the necessary cuda and tensorrt runtime libraries. The missing hardware-specific cuda libraries are provided by the [nvidia-tegra-runtime snap](../nvidia-tegra-runtime/). We also need to plug into the hardware-observe, microstack-support, network-bind and opengl interfaces for the necessary hardware access.
 
-In this snap, we package the 4 cuDNN samples `conv_sample`, `mnistCUDNN`, `RNN_v8.0` and multiHeadAttention. The samples are built by navigating to the respective directories in `$CRAFT_PART_INSTALL/usr/src/cudnn_samples_v9` and running `make`. In the `multiHeadAttention` sample, we need to make some additional changes to the sources in order to execute the samples correctly.
+In this snap, we package the 4 cuDNN samples `conv_sample`, `mnistCUDNN`, `RNN_v8.0` and multiHeadAttention. The samples are built by navigating to the respective directories in `$CRAFT_PART_INSTALL/usr/src/cudnn_samples_v9` and running `cmake` and `cmake --build`. In the `multiHeadAttention` sample, we need to make some additional changes to the sources in order to execute the samples correctly.
 
 The `attn_ref.py` file will be executed with the `python` binary which isn't available in the build environment, so we run it with `python3` instead. We also need to cast `np.shape(w)[0]` to an integer inside the `attn_ref.py` file.
 
@@ -21,7 +21,10 @@ $ snapcraft
 $ sudo snap install --dangerous cudnn-samples_1.0_arm64.snap
 
 $ sudo snap connect cudnn-samples:hardware-observe
-$ sudo snap connect cudnn-samples:tensorrt-libs-cuda-12 tensorrt-libs:tensorrt-libs-cuda-12
+$ sudo snap connect cudnn-samples:microstack-support
+$ sudo snap connect cudnn-samples:network-bind
+$ sudo snap connect cudnn-samples:tensorrt-libs-cuda-13 tensorrt-libs:tensorrt-libs-cuda-13
+$ sudo snap connect cudnn-samples:gpu-2404 nvidia-tegra-runtime:gpu-2404
 ```
 
 You can find a list of commands to execute by running the following:

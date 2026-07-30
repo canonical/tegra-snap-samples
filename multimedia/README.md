@@ -19,11 +19,14 @@ $ snapcraft
 $ sudo snap install --dangerous multimedia_1.0_arm64.snap
 
 $ sudo snap connect multimedia:camera
+$ sudo snap connect multimedia:network-bind
 $ sudo snap connect multimedia:hardware-observe
 $ sudo snap connect multimedia:kernel-module-observe
 $ sudo snap connect multimedia:media-control
 $ sudo snap connect multimedia:process-control
+$ sudo snap connect multimedia:nvcam-settings
 $ sudo snap connect multimedia:tegra-camera-plug multimedia:tegra-camera-slot
+$ sudo snap connect multimedia:gpu-2404 nvidia-tegra-runtime:gpu-2404
 ```
 
 After connecting the interfaces, the nvargus-daemon contained in the snap might have to be restarted:
@@ -80,20 +83,20 @@ $ sudo snap run multimedia.unzip bbb_sunflower_1080p_30fps_normal.mp4.zip
 $ sudo snap run multimedia.gst-launch filesrc \
     location=bbb_sunflower_1080p_30fps_normal.mp4 ! qtdemux ! queue ! \
     h264parse ! nvv4l2decoder ! nvv4l2h265enc bitrate=8000000 ! h265parse ! \
-    qtmux ! filesink location=riverside-camera-h265-reenc.mp4 -e
+    qtmux ! filesink location=camera-h265-reenc.mp4 -e
 
 $ sudo snap run multimedia.gst-launch filesrc \
-    location=riverside-camera-h265-reenc.mp4 ! qtdemux ! queue ! \
+    location=camera-h265-reenc.mp4 ! qtdemux ! queue ! \
     h265parse ! nvv4l2decoder ! nvv4l2av1enc ! matroskamux name=mux ! \
-    filesink location=riverside-camera-av1-reenc.mkv -e
+    filesink location=camera-av1-reenc.mkv -e
 
 $ sudo snap run multimedia.gst-launch filesrc \
-    location=riverside-camera-av1-reenc.mkv ! matroskademux ! queue ! av1parse ! \
+    location=camera-av1-reenc.mkv ! matroskademux ! queue ! av1parse ! \
     nvv4l2decoder ! nvv4l2h264enc bitrate=20000000 ! h264parse ! queue ! \
-    qtmux name=mux ! filesink location=riverside-camera-h264-reenc.mp4 -e
+    qtmux name=mux ! filesink location=camera-h264-reenc.mp4 -e
 
 $ sudo snap run multimedia.gst-launch filesrc \
-    location=riverside-camera-h264-reenc.mp4 ! qtdemux ! \
+    location=camera-h264-reenc.mp4 ! qtdemux ! \
     h264parse ! nvv4l2decoder ! nvv4l2av1enc ! matroskamux name=mux ! \
-    filesink location=riverside-camera-av1-reenc-2x.mkv -e
+    filesink location=camera-av1-reenc-2x.mkv -e
 ```

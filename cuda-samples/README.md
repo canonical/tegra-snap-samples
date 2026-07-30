@@ -3,35 +3,34 @@
 This snap packages software coming from Nvidia's [cuda-samples
 repository](https://github.com/NVIDIA/cuda-samples/)
 
-It depends on the cuda toolkit for compilation and the tensorrt-libs-cuda-12
+It depends on the cuda toolkit for compilation and the tensorrt-libs-cuda-13
 content interface from the [tensorrt-libs
 snap](../tensorrt-libs/) to access the cuda and
-tensorrt runtime libraries. It is also dependent on the graphics-core22
+tensorrt runtime libraries. It is also dependent on the gpu-2404
 interface from the [nvidia-tegra-runtime
 snap](../nvidia-tegra-runtime/).
 
-The graphics-core22 interface for now only provides access to several runtime
+The gpu-2404 interface for now only provides access to several runtime
 libraries necessary to communicate with the GPU but not other graphics
 libraries (X11, Wayland, OpenGL etc.).  So inside this snap we execute the
-`graphics-core22-wrapper` which will call the
-`graphics-core22-provider-wrapper` from the driver snap which will set up our
+`gpu-2404-wrapper` which will call the
+`gpu-2404-provider-wrapper` from the driver snap which will set up our
 library paths to the proper values for our applications to function. This needs
 to then be included in the command chain before calling the actual command.
 
-In order for strict confinement to work, we need the hardware-observe and
-opengl interfaces. There is one cuda sample that requires a special device node
-that we give access to using the system-files interface.
+In order for strict confinement to work, we need the hardware-observe, 
+network-bind and opengl interfaces.
 
-The samples are built using the Makefile from the root directory of the
-cuda-samples sources. Some samples will require write permissions in the
-working directory they are being executed from. Therefore we use an install and
-post-refresh hook to copy the compiled sources plus the data into the
-`$SNAP_DATA` directory which allows for read and write operations. In the build
-step we search for all executable samples and create appropriate symbolic links
-from the `$SNAP/usr/bin` directory to the destination in `$SNAP_DATA`. The
-wrapper script that is used to execute the samples takes the name of a sample
-as an argument and will first follow the symlink into `$SNAP_DATA` before
-executing the specified sample.
+The samples are built by creating a build directory in the cuda-samples sources 
+and running cmake and then make from there.  Some samples will require write 
+permissions in the working directory they are being executed from. Therefore we 
+use an install and post-refresh hook to copy the compiled sources plus the data 
+into the `$SNAP_DATA` directory which allows for read and write operations. In 
+the build step we search for all executable samples and create appropriate 
+symbolic links from the `$SNAP/usr/bin` directory to the destination in 
+`$SNAP_DATA`. The wrapper script that is used to execute the samples takes the 
+name of a sample as an argument and will first follow the symlink into 
+`$SNAP_DATA` before executing the specified sample.
 
 # Build, Install and Run Samples
 In order for the snap to work, you must first install the
@@ -43,12 +42,13 @@ install it using the `--dangerous` flag. Then connect the interfaces:
 
 ```
 $ snapcraft
-$ sudo snap install --dangerous ./cuda-samples_12.6_arm64.snap
-$
-$ sudo snap connect cuda-samples:graphics-core22 nvidia-tegra-runtime:graphics-core22
-$ sudo snap connect cuda-samples:tensorrt-libs-cuda-12 tensorrt-libs:tensorrt-libs-cuda-12
+$ sudo snap install --dangerous ./cuda-samples_13.2_arm64.snap
+
+$ sudo snap connect cuda-samples:gpu-2404 nvidia-tegra-runtime:gpu-2404
+$ sudo snap connect cuda-samples:tensorrt-libs-cuda-13 tensorrt-libs:tensorrt-libs-cuda-13
 $ sudo snap connect cuda-samples:system-files
 $ sudo snap connect cuda-samples:hardware-observe
+$ sudo snap connect cuda-samples:network-bind
 ```
 
 A list of all sample commands can be found in

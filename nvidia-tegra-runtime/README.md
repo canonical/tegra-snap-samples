@@ -4,8 +4,7 @@ This snap provides L4T packages such as `nvidia-l4t-nvml`, `nvidia-l4t-cuda`,
 `nvidia-l4t-dla-compiler`, and `nvidia-l4t-graphics-demos`
 from the [Nvidia package repository](https://repo.download.nvidia.com/jetson)
 which contain runtime libraries for the Nvidia tegra platforms in order to run the
-CUDA toolkit, this snap does not include the `nvidia-tegra-drivers-36` package
-anymore.
+CUDA toolkit.
 
 It includes the `nvidia-smi` tool to query information about the GPU. In order
 to function, the tool needs access to the firmware files which should be
@@ -13,14 +12,13 @@ installed on the system. On Classic, the firmware should be installed with the
 `linux-firmware-nvidia-tegra` package. On Core, the firmware is part of the
 kernel snap.
 
-Access to the core files to external snaps is given using the graphics-core22
+Access to the core files to external snaps is given using the gpu-2404
 interface which should eventually also include more graphics libraries (X11,
-Wayland, Vulkan etc.). The graphics-core22-provider-wrapper included in this
-snap is taken from the [nvidia-core22
-snap](https://github.com/snapcore/nvidia-core22) and the `$LD_LIBRARY_PATH`
-extended by `${SELF}/usr/lib/${ARCH_TRIPLET}/nvidia` to point to the shared
-objects from the nvidia-tegra-runtime package.
-the name of the snap doesn't change.
+Wayland, Vulkan etc.). The gpu-2404-provider-wrapper included in this
+snap is taken from the [mesa-2404 snap]
+(https://github.com/canonical/mesa-2404) and the `$LD_LIBRARY_PATH` extended 
+by `${SELF}/usr/lib/${ARCH_TRIPLET}/nvidia` to point to the shared objects 
+from the nvidia-tegra-runtime package.
 
 This snap needs access to several different device nodes on the system. The
 access to these device nodes is provided by the existing `hardware-observe`
@@ -33,7 +31,7 @@ and connect all the remaining interfaces:
 
 ```
 $ snapcraft
-$ sudo snap install --dangerous nvidia-tegra-runtime_36.4_arm64.snap
+$ sudo snap install --dangerous nvidia-tegra-runtime_39.2_arm64.snap
 $ sudo snap connect nvidia-tegra-runtime:hardware-observe
 ```
 
@@ -48,24 +46,24 @@ and `render` groups.
 The output should look like this:
 ```
 ubuntu@ubuntu:~$ snap run nvidia-tegra-runtime.nvidia-smi
-Wed Dec  4 13:48:28 2024
-+---------------------------------------------------------------------------------------+
-| NVIDIA-SMI 540.4.0                Driver Version: 540.4.0      CUDA Version: 12.4     |
-|-----------------------------------------+----------------------+----------------------+
-| GPU  Name                 Persistence-M | Bus-Id        Disp.A | Volatile Uncorr. ECC |
-| Fan  Temp   Perf          Pwr:Usage/Cap |         Memory-Usage | GPU-Util  Compute M. |
-|                                         |                      |               MIG M. |
-|=========================================+======================+======================|
-|   0  Orin (nvgpu)                  N/A  | N/A              N/A |                  N/A |
-| N/A   N/A  N/A               N/A /  N/A | Not Supported        |     N/A          N/A |
-|                                         |                      |                  N/A |
-+-----------------------------------------+----------------------+----------------------+
+Thu Jul 30 12:10:52 2026
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 595.78                 Driver Version: 595.78         CUDA Version: 13.2     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  Orin (nvgpu)                  N/A  |   N/A              N/A |                  N/A |
+| N/A   N/A  N/A             N/A  /  N/A  | Not Supported          |     N/A          N/A |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
 
-+---------------------------------------------------------------------------------------+
-| Processes:                                                                            |
-|  GPU   GI   CI        PID   Type   Process name                            GPU Memory |
-|        ID   ID                                                             Usage      |
-|=======================================================================================|
-|  No running processes found                                                           |
-+---------------------------------------------------------------------------------------+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
 ```

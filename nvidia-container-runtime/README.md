@@ -6,12 +6,12 @@ Before running docker containers using the nvidia container runtime, we need to 
 
 In order to use the docker snap, we need to pass runtime libraries and device nodes in the form of a "Container Device Interface" (CDI) specification whereas on a classic Ubuntu image we can use the CSV format.
 
-We can generate the CDI specification by adapting the CSV files that are shipped with the nvidia-l4t-init .deb package from the [Nvidia package repository](https://repo.download.nvidia.com/jetson). The modification is done by simply changing the path of the files listed in `drivers.csv` to the path where it will be found inside the docker snap. The modified CSV files are contained in this directory. The CDI specification can then be generated from within the docker snap. The docker snap will only find the necessary runtime libraries to pass to the container runtime, when it is connected to the `graphics-core22` interface of the [nvidia-tegra-runtime snap](../nvidia-tegra-runtime) which needs to be built and installed before.
+We can generate the CDI specification by adapting the CSV files that are shipped with the nvidia-l4t-init .deb package from the [Nvidia package repository](https://repo.download.nvidia.com/jetson). The modification is done by simply changing the path of the files listed in `drivers.csv` to the path where it will be found inside the docker snap. The modified CSV files are contained in this directory. The CDI specification can then be generated from within the docker snap. The docker snap will only find the necessary runtime libraries to pass to the container runtime, when it is connected to the `gpu-2404` interface of the [nvidia-tegra-runtime snap](../nvidia-tegra-runtime) which needs to be built and installed before.
 
-Install the docker snap and connect it to the `graphics-core22` interface:
+Install the docker snap and connect it to the `gpu-2404` interface:
 ```
 $ sudo snap install docker
-$ sudo snap connect docker:graphics-core22 nvidia-tegra-runtime:graphics-core22
+$ sudo snap connect docker:gpu-2404 nvidia-tegra-runtime:gpu-2404
 ```
 
 If the nvidia container toolkit is installed on the host, a nvidia-cdi-refresh.service will also be present. This service should be disabled as it will generate an incompatible CDI spec in /var/run/cdi/nvidia.yaml which will have a higher priority than the one we will place in the docker snap's `$SNAP_DATA` directory.
