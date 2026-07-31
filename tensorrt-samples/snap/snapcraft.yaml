@@ -1,6 +1,6 @@
 name: tensorrt-samples # you probably want to 'snapcraft register <name>'
-base: core22 # the base snap is the execution environment for this snap
-version: '10.3.0.30-1+cuda12.5' # just for humans, typically '1.2+git' or '1.3.2'
+base: core24 # the base snap is the execution environment for this snap
+version: '10.16.2.10-1+cuda13.2' # just for humans, typically '1.2+git' or '1.3.2'
 summary: Tensorrt sample applications # 79 char long summary
 description: |
   Tensorrt sample applications to test the GPU
@@ -10,15 +10,19 @@ confinement: strict # use 'strict' once you have the right plugs and slots
 
 package-repositories:
   - type: apt
+    path: /
+    key-id: EB693B3035CD5710E231E123A4B469963BF863CC
+    url: https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/sbsa
+  - type: apt
     components: [main]
-    suites: [r36.5]
+    suites: [r39.2]
     key-id: 3C6D1FF3100C8C3ABB0869C0E6543461A9996195
     key-server: https://repo.download.nvidia.com/jetson/jetson-ota-public.asc
-    url: https://repo.download.nvidia.com/jetson/t234
+    url: https://repo.download.nvidia.com/jetson/som
     architectures: [arm64]
   - type: apt
     components: [main]
-    suites: [r36.5]
+    suites: [r39.2]
     key-id: 3C6D1FF3100C8C3ABB0869C0E6543461A9996195
     key-server: https://repo.download.nvidia.com/jetson/jetson-ota-public.asc
     url: https://repo.download.nvidia.com/jetson/common
@@ -27,53 +31,86 @@ package-repositories:
 plugs:
   hardware-observe:
   opengl:
-  graphics-core22:
+  microstack-support:
+  network-bind:
+  gpu-2404:
     interface: content
-    target: $SNAP/graphics
-  tensorrt-libs-cuda-12:
+    target: $SNAP/gpu-2404
+  tensorrt-libs-cuda-13:
     interface: content
     target: $SNAP/tensorrt-libs
 
 apps:
   tensorrt-samples:
     command-chain:
-      - bin/graphics-core22-wrapper
+      - bin/gpu-2404-wrapper
       - bin/tensorrt-libs-wrapper
     command: bin/execute_sample.sh
-    environment:
-      LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/usr/local/cuda-12.6/targets/aarch64-linux/lib
+
+layout:
+  /usr/local/cuda/targets/sbsa-linux/lib:
+    symlink: $SNAP/tensorrt-libs/usr/local/cuda-13.2/lib64
+  /usr/local/cuda-13.2/lib64:
+    symlink: $SNAP/tensorrt-libs/usr/local/cuda-13.2/lib64
 
 parts:
   tensorrt-samples:
     plugin: nil
+    source: https://github.com/NVIDIA/TensorRT.git
+    source-type: git
+    source-tag: release/10.16
+    build-snaps:
+      - cmake
     build-packages:
       - initramfs-tools
-      - cuda-12-6
+      - cuda-13-2
+      - unzip
+      - wget
+      - aptitude
         #- libnvinfer-bin
-      - libnvinfer-samples
-    stage-packages:
-      - libnvinfer-samples
     override-build: |
-      mkdir -p /opt/nvidia/l4t-packages/
-      touch /opt/nvidia/l4t-packages/.nv-l4t-disable-boot-fw-update-in-preinstall
-      L4T_DEB_PACKAGES_PATH=${L4T_DEB_PACKAGES_PATH:="NVIDIA_ARCHIVE"}
-      if [ "$L4T_DEB_PACKAGES_PATH" = "NVIDIA_ARCHIVE" ]; then
-        apt update
-        apt install --yes nvidia-l4t-dla-compiler nvidia-l4t-cuda
-      elif [ -d $L4T_DEB_PACKAGES_PATH ]; then
-        apt install --yes libegl1 -f
-        dpkg -i $L4T_DEB_PACKAGES_PATH/nvidia-l4t-cuda_*.deb
-        # nvidia-l4t-dla-compiler is not part of the private set of Nvidia packages,
-        # that's why it is installed through the Nvidia archive.
-        apt install --yes nvidia-l4t-dla-compiler
+      TENSORRT_VERSION=10.16.2.10-1+cuda13.2
+      aptitude install -y -o "Aptitude::ProblemResolver::Hints::=reject tensorrt :UNINST" tensorrt=$TENSORRT_VERSION
+
+      mkdir build
+      cd build
+      cmake .. \
+          -DCMAKE_CUDA_COMPILER=/usr/local/cuda-13.2/bin/nvcc  \
+          -DCMAKE_BUILD_TYPE=Debug \
+          -DTRT_LIB_DIR=/usr/lib/aarch64-linux-gnu \
+          -DTRT_OUT_DIR=`pwd`/bin \
+          -DBUILD_SAMPLES=ON \
+          -DBUILD_PARSERS=OFF \
+          -DBUILD_PLUGINS=OFF \
+          -DTRT_PLATFORM_ID=aarch64
+      cmake --build . --parallel $(nproc)
+      mkdir -p $CRAFT_PART_INSTALL/usr/src/tensorrt/samples/
+      cp -ar samples/ $CRAFT_PART_INSTALL/usr/src/tensorrt
+      cp -ar bin/ $CRAFT_PART_INSTALL/usr/src/tensorrt
+
+      echo "Fetching tensorrt_sample_data URL"
+      if ! wget -q https://raw.githubusercontent.com/NVIDIA/TensorRT/release/11.0/samples/README.md; then
+        echo "Error: failed to fetch the tensorrt_sample_data URL"
+        exit 1
       fi
-      echo '/usr/local/cuda-12.6/compat' | tee -a /etc/ld.so.conf.d/000_cuda.conf
-      ldconfig
-      cd $CRAFT_PART_INSTALL/usr/src/tensorrt/samples
-      make
+      sample_data_url=$(grep -o "https://github.com/NVIDIA/TensorRT/releases/download/.*zip" README.md)
+      if [ -z "$sample_data_url" ]; then
+        echo "Error: sample_data_url is empty"
+        exit 1
+      fi
+      echo "Downloading tensorrt_sample_data"
+      if ! wget -q $sample_data_url; then
+        echo "Error: failed to download the tensorrt_sample_data"
+        rm -rf README.md
+        exit 1
+      fi
+      echo "Installing the TensorRT sample_data"
+      unzip tensorrt_sample_data_*.zip -d $CRAFT_PART_INSTALL/usr/src/tensorrt/data
+
     override-prime: |
       mkdir -p $CRAFT_PRIME/usr/src
       cp -r $CRAFT_STAGE/usr/src/tensorrt $CRAFT_PRIME/usr/src
+      craftctl default
 
   tensorrt-samples-list:
     plugin: dump

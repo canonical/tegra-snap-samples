@@ -1,0 +1,95 @@
+#!/bin/bash
+set -euo pipefail
+
+# The second content element is mounted at "${content_target}-2"
+COMPONENT_PATH="$( cd -- "$(dirname "$0")"/.. ; pwd -P )-2"
+
+# Use the component mangler to bootstrap the environment
+if [ -f ${COMPONENT_PATH}/kernel-gpu-2404-sentinel ]; then
+  . ${COMPONENT_PATH}/kernel-gpu-2404-provider-mangler
+fi
+
+SELF_BASE="$( cd -- "$(dirname "$0")/.." ; pwd -P )"
+SELF=${SELF_BASE}/usr
+ARCH_TRIPLETS=( aarch64-linux-gnu )
+
+CHIP="$(tr -d '\0' < /proc/device-tree/compatible 2>/dev/null)"
+if [[ "${CHIP}" =~ "tegra23" ]]; then
+    VARIANT="nvgpu"
+else
+    # tegra264 and later use openrm-l4t
+    VARIANT="openrm"
+fi
+
+# VDPAU_DRIVER_PATH only supports a single path, rely on LD_LIBRARY_PATH instead
+for arch in ${ARCH_TRIPLETS[@]}; do
+  GBM_BACKENDS_PATH=${GBM_BACKENDS_PATH:+$GBM_BACKENDS_PATH:}${SELF}/lib/${arch}/gbm
+  LD_LIBRARY_PATH=${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}${SELF}/lib/${arch}:${SELF}/lib/${arch}/dri:${SELF}/lib/${arch}/vdpau:${SELF}/lib/${arch}/nvidia:${SELF}/lib/${arch}/tegra-egl:${SELF_BASE}/lib/${arch}:${SELF_BASE}/opt/nvidia/l4t-gpu-libs/${VARIANT}
+  LIBVA_DRIVERS_PATH=${LIBVA_DRIVERS_PATH:+$LIBVA_DRIVERS_PATH:}${SELF}/lib/${arch}/dri
+  LIBGL_DRIVERS_PATH=${LIBGL_DRIVERS_PATH:+$LIBGL_DRIVERS_PATH:}${SELF}/lib/${arch}/dri/
+done
+OCL_ICD_VENDORS=${OCL_ICD_VENDORS:+$OCL_ICD_VENDORS:}${SELF_BASE}/etc/OpenCL/vendors
+__EGL_VENDOR_LIBRARY_DIRS=${__EGL_VENDOR_LIBRARY_DIRS:+$__EGL_VENDOR_LIBRARY_DIRS:}${SELF}/share/glvnd/egl_vendor.d
+__EGL_EXTERNAL_PLATFORM_CONFIG_DIRS=${__EGL_EXTERNAL_PLATFORM_CONFIG_DIRS:+$__EGL_EXTERNAL_PLATFORM_CONFIG_DIRS:}${SELF}/share/egl/egl_external_platform.d
+# DRIRC_CONFIGDIR=$( cd -- "$(dirname "$0")/../drirc.d" ; pwd -P )
+VK_LAYER_PATH=${VK_LAYER_PATH:+$VK_LAYER_PATH:}${SELF}/share/vulkan/implicit_layer.d/:${SELF}/share/vulkan/explicit_layer.d
+XDG_DATA_DIRS=${XDG_DATA_DIRS:+$XDG_DATA_DIRS:}${SELF}/share
+XLOCALEDIR=${SELF}/share/X11/locale
+
+# These are in the default LD_LIBRARY_PATH, but in case the snap dropped it inadvertently
+if [ -d "/var/lib/snapd/lib/gl" ] && [[ ! ${LD_LIBRARY_PATH} =~ (^|:)/var/lib/snapd/lib/gl(:|$) ]]; then
+  LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/var/lib/snapd/lib/gl
+fi
+
+if [ -d "/var/lib/snapd/lib/gl32" ] && [[ ! ${LD_LIBRARY_PATH} =~ (^|:)/var/lib/snapd/lib/gl32(:|$) ]]; then
+  LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/var/lib/snapd/lib/gl32
+fi
+
+if [ -d "/var/lib/snapd/lib/glvnd/egl_vendor.d" ]; then
+  # This needs to be prepended, as glvnd goes depth-first on these
+  # TODO maybe collect the JSONs into a separate location so their ordering matters,
+  #  and not the dir order
+  __EGL_VENDOR_LIBRARY_DIRS=/var/lib/snapd/lib/glvnd/egl_vendor.d:${__EGL_VENDOR_LIBRARY_DIRS}
+fi
+
+if [ -d "/var/lib/snapd/lib/vulkan/icd.d" ]; then
+  XDG_DATA_DIRS=${XDG_DATA_DIRS}:/var/lib/snapd/lib
+fi
+
+if [ -d "/var/lib/snapd/lib/gl/vdpau" ]; then
+  LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/var/lib/snapd/lib/gl/vdpau
+fi
+
+if [ -d "/var/lib/snapd/lib/gl32/vdpau" ]; then
+  LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/var/lib/snapd/lib/gl32/vdpau
+fi
+
+if [ -d "/var/lib/snapd/lib/gl/gbm" ]; then
+  GBM_BACKENDS_PATH=${GBM_BACKENDS_PATH}:/var/lib/snapd/lib/gl/gbm
+fi
+
+if [ -d "/var/lib/snapd/lib/gl32/gbm" ]; then
+  GBM_BACKENDS_PATH=${GBM_BACKENDS_PATH}:/var/lib/snapd/lib/gl32/gbm
+fi
+
+export GBM_BACKENDS_PATH
+export LD_LIBRARY_PATH
+if [ "${__NV_PRIME_RENDER_OFFLOAD:-}" != 1 ]; then
+  # Prevent picking VA-API (Intel/AMD) over NVIDIA VDPAU
+  # https://download.nvidia.com/XFree86/Linux-x86_64/510.54/README/primerenderoffload.html#configureapplications
+  export LIBVA_DRIVERS_PATH
+fi
+export LIBGL_DRIVERS_PATH
+export __EGL_VENDOR_LIBRARY_DIRS
+export __EGL_EXTERNAL_PLATFORM_CONFIG_DIRS
+# export DRIRC_CONFIGDIR
+export VK_LAYER_PATH
+export XDG_DATA_DIRS
+export XLOCALEDIR
+export OCL_ICD_VENDORS
+
+# Make use of the https://gitlab.freedesktop.org/mesa/libdrm/-/merge_requests/273 patch
+# in libdrm to find the amdgpu.ids file in other places
+export AMDGPU_ASIC_ID_TABLE_PATHS=${AMDGPU_ASIC_ID_TABLE_PATHS:+$AMDGPU_ASIC_ID_TABLE_PATHS:}${SELF_BASE}/libdrm
+
+exec "$@"

@@ -1,6 +1,6 @@
 name: vpi-runtime
-base: core22
-version: 3.2.4-1
+base: core24
+version: 4.1.3
 summary: NVIDIA VPI runtime libraries
 description: |
   This snap contains the VPI runtime libraries contained in the deb
@@ -12,21 +12,23 @@ confinement: strict
 
 package-repositories:
   - type: apt
+    path: /
+    key-id: EB693B3035CD5710E231E123A4B469963BF863CC
+    url: https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/sbsa
+  - type: apt
     components: [main]
-    suites: [r36.5]
+    suites: [r39.2]
     key-id: 3C6D1FF3100C8C3ABB0869C0E6543461A9996195
     key-server: https://repo.download.nvidia.com/jetson/jetson-ota-public.asc
-    url: https://repo.download.nvidia.com/jetson/t234
+    url: https://repo.download.nvidia.com/jetson/som
     architectures: [arm64]
   - type: apt
     components: [main]
-    suites: [r36.5]
+    suites: [r39.2]
     key-id: 3C6D1FF3100C8C3ABB0869C0E6543461A9996195
     key-server: https://repo.download.nvidia.com/jetson/jetson-ota-public.asc
     url: https://repo.download.nvidia.com/jetson/common
     architectures: [arm64]
-  - type: apt
-    ppa: ubuntu-tegra/updates
 
 parts:
   vpi-runtime:
@@ -60,8 +62,8 @@ parts:
       - libopencv
       - libopencv-python
       - nvidia-vpi
-      - libnvvpi3
-      - python3.10-vpi3
+      - libnvvpi4
+      - python3.12-vpi4
       - libegl1
     override-prime: |
       craftctl default
@@ -72,7 +74,7 @@ parts:
     source: .
 
 slots:
-  vpi3-core22:
+  vpi4-core24:
     interface: content
     read: [$SNAP]
 

@@ -1,3 +1,0 @@
-#!/bin/sh
-
-exec "${SNAP}/graphics/bin/graphics-core22-provider-wrapper" "$@"

@@ -1,26 +1,24 @@
 # TensorRT Samples
 
-This snap packages software coming from Nvidia's TensorRT samples, contained in
-the `libnvinfer-samples` .deb package.
+This snap packages software coming from Nvidia's 
+[TensorRT samples](https://github.com/NVIDIA/TensorRT.git).
 
-For compilation, we need to include the packages `cuda-12-6` which contains the
-cuda toolkit and runtime libraries, `libnvdla_compiler` and
-`libnvinfer-samples` which contains the samples themselves as well as
-additional libraries and its dependencies.
+For compilation, we need to include the packages `cuda-13-2` which contains the
+cuda toolkit and runtime libraries.
 
 In order for this snap to work, we need the same interfaces as the
 [cuda-samples snap](../cuda-samples/). The
-graphics-core22 interface should be provided by the [nvidia-tegra-runtime
+gpu-2404 interface should be provided by the [nvidia-tegra-runtime
 snap](../nvidia-tegra-runtime/). The
-tensorrt-libs-cuda-12 interface will be provided by the [tensorrt-libs
+tensorrt-libs-cuda-13 interface will be provided by the [tensorrt-libs
 snap](../tensorrt-libs/) and contains the
 necessary cuda and tensorrt runtime libraries.
 
 The `$LD_LIBRARY_PATH` variable will be properly set up using the wrapper
 script which will call the tensorrt-libs snap's provider-wrapper.
 
-We build the samples by calling make from the samples directory inside the
-sources contained in the `libnvinfer-samples` package and then only copy the
+We build the samples by running cmake from a build directory inside the 
+samples' sources and then run `cmake --build` and then only copy the
 tensorrt-samples' sources plus the binaries into the final snap. Some samples
 require write permissions in the directory they are being executed from, so we
 include an install hook that copies the whole directory into `$SNAP_DATA`. The
@@ -40,9 +38,11 @@ install it using the `--dangerous` flag. Then connect the interfaces:
 $ snapcraft
 $ sudo snap install --dangerous tensorrt-samples_10.3.0.30-1+cuda12.5_arm64.snap
 
-$ sudo snap connect tensorrt-samples:graphics-core22 nvidia-tegra-runtime:graphics-core22
-$ sudo snap connect tensorrt-samples:tensorrt-libs-cuda-12 tensorrt-libs:tensorrt-libs-cuda-12
+$ sudo snap connect tensorrt-samples:gpu-2404 nvidia-tegra-runtime:gpu-2404
+$ sudo snap connect tensorrt-samples:tensorrt-libs-cuda-13 tensorrt-libs:tensorrt-libs-cuda-13
 $ sudo snap connect tensorrt-samples:hardware-observe
+$ sudo snap connect tensorrt-samples:microstack-support
+$ sudo snap connect tensorrt-samples:network-bind
 ```
 
 A given sample can be executed with:

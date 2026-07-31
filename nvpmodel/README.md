@@ -4,7 +4,7 @@ This snap packages the `nvpmodel` and the `jetson_clocks` utilities which can be
 
 The following website can be consulted, for more information about the NVIDIA power modes on Jetson devices.
 
-[Supported Modes and Power Efficiency](https://docs.nvidia.com/jetson/archives/r36.4.3/DeveloperGuide/SD/PlatformPowerAndPerformance/JetsonOrinNanoSeriesJetsonOrinNxSeriesAndJetsonAgxOrinSeries.html#sd-platformpowerandperformance-supportedmodesandpowerefficiency)
+[Supported Modes and Power Efficiency](https://docs.nvidia.com/jetson/archives/r39.2/DeveloperGuide/SD/PlatformPowerAndPerformance/JetsonOrinNanoSeriesJetsonOrinNxSeriesAndJetsonAgxOrinSeries.html#sd-platformpowerandperformance-supportedmodesandpowerefficiency)
 
 This snap doesn't require any extra build steps for the software it provides since it uses staging packages, such as some specific NVIDIA L4T packages (i.e., `nvidia-l4t-nvpmodel`, `nvidia-l4t-core` and `nvidia-l4t-tools`) to provide runtime libraries and binaries.
 
@@ -19,6 +19,7 @@ $ snapcraft -v --destructive-mode
 $ sudo snap install --dangerous nvpmodel_1.0_arm64.snap
 
 $ sudo snap connect nvpmodel:hardware-observe
+$ sudo snap connect nvpmodel:system-observe
 $ sudo snap connect nvpmodel:set-power-management-mode
 $ sudo snap connect nvpmodel:shutdown
 $ sudo snap connect nvpmodel:dbus-consumer nvpmodel:dbus-provider

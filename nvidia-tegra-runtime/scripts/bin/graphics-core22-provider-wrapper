@@ -4,9 +4,17 @@ set -euo pipefail
 SELF="$( cd -- "$(dirname "$0")/.." ; pwd -P )/usr"
 ROOT_SELF="$( cd -- "$(dirname "$0")/.." ; pwd -P )"
 
+CHIP="$(tr -d '\0' < /proc/device-tree/compatible 2>/dev/null)"
+if [[ "${CHIP}" =~ "tegra23" ]]; then
+    VARIANT="nvgpu"
+else
+    # tegra264 and later use openrm-l4t
+    VARIANT="openrm"
+fi
+
 ARCH_TRIPLET="aarch64-linux-gnu"
 # VDPAU_DRIVER_PATH only supports a single path, rely on LD_LIBRARY_PATH instead
-LD_LIBRARY_PATH=${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}${SELF}/lib/${ARCH_TRIPLET}:${SELF}/lib/${ARCH_TRIPLET}/vdpau:${SELF}/lib/${ARCH_TRIPLET}/nvidia:${SELF}/lib/${ARCH_TRIPLET}/tegra-egl:${ROOT_SELF}/lib/${ARCH_TRIPLET}
+LD_LIBRARY_PATH=${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}${SELF}/lib/${ARCH_TRIPLET}:${SELF}/lib/${ARCH_TRIPLET}/vdpau:${SELF}/lib/${ARCH_TRIPLET}/nvidia:${SELF}/lib/${ARCH_TRIPLET}/tegra-egl:${ROOT_SELF}/lib/${ARCH_TRIPLET}:${ROOT_SELF}/opt/nvidia/l4t-gpu-libs/${VARIANT}
 
 LIBGL_DRIVERS_PATH=${LIBGL_DRIVERS_PATH:+$LIBGL_DRIVERS_PATH:}${SELF}/lib/${ARCH_TRIPLET}/dri/
 LIBVA_DRIVERS_PATH=${LIBVA_DRIVERS_PATH:+$LIBVA_DRIVERS_PATH:}${SELF}/lib/${ARCH_TRIPLET}/dri/
