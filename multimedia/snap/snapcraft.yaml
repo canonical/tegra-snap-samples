@@ -36,10 +36,6 @@ plugs:
     interface: custom-device
     custom-device: tegra-camera
   home:
-  var-tmp:
-    interface: system-files
-    write:
-      - /var/tmp
 
 slots:
   tegra-camera-slot:
