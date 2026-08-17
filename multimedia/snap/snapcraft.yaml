@@ -35,6 +35,7 @@ plugs:
   tegra-camera-plug:
     interface: custom-device
     custom-device: tegra-camera
+  home:
 
 slots:
   tegra-camera-slot:

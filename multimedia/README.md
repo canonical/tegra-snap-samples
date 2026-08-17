@@ -24,6 +24,7 @@ $ sudo snap connect multimedia:kernel-module-observe
 $ sudo snap connect multimedia:media-control
 $ sudo snap connect multimedia:process-control
 $ sudo snap connect multimedia:tegra-camera-plug multimedia:tegra-camera-slot
+$ sudo snap connect multimedia:home
 ```
 
 After connecting the interfaces, the nvargus-daemon contained in the snap might have to be restarted:
