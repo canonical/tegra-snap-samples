@@ -7,6 +7,7 @@ snaps that plug into this content interface should provide a
 script from this snap in order to set up the `$LD_LIBRARY_PATH`. This should
 be in `$SNAP/tensorrt-libs/bin/tensorrt-libs-provider-wrapper`.
 
-The `tensorrt` package is installed using `aptitude` in an override-stage step 
-because all dependencies need to be installed with a version that is not the 
-latest and aptitude provides options to resolve such dependencies automatically.
+The `tensorrt` package is installed with a specific version which requires also
+defining all its dependencies with the accurate versions. This is because
+the tensorrt libraries need to be aligned with the installed drivers but they
+move independently.
