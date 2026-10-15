@@ -17,6 +17,7 @@ plugs:
   vpi4-core24:
     interface: content
     target: $SNAP/vpi
+  network-bind:
   system-files:
     read:
       - /proc/driver/nvidia/gpus
