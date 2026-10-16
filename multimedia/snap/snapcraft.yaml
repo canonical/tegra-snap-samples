@@ -90,6 +90,8 @@ apps:
     command-chain: [bin/wrapper_local]
     command: usr/bin/v4l2-ctl
   gst-launch:
+    environment:
+      LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/opt/nvidia/l4t-gpu-libs/openrm
     command-chain: [bin/gpu-2404-wrapper, bin/wrapper_local]
     command: usr/bin/gst-launch-1.0
   nvargus-daemon:
@@ -108,6 +110,7 @@ parts:
         apt download nvidia-l4t-camera nvidia-l4t-gstreamer nvidia-l4t-3d-core nvidia-l4t-multimedia
         apt download nvidia-l4t-core nvidia-l4t-multimedia-utils nvidia-l4t-nvsci
         apt download nvidia-l4t-multimedia-nvgpu nvidia-l4t-multimedia-openrm
+        apt download nvidia-l4t-video-codec-openrm
         debian_packages=$(find . -name "nvidia-l4t*.deb")
       elif [ -d $L4T_DEB_PACKAGES_PATH ]; then
         debian_packages="$(find $L4T_DEB_PACKAGES_PATH\
@@ -119,6 +122,7 @@ parts:
         -name "nvidia-l4t-multimedia-utils_*.deb" -o\
         -name "nvidia-l4t-multimedia-nvgpu_*.deb" -o\
         -name "nvidia-l4t-multimedia-openrm_*.deb" -o\
+        -name "nvidia-l4t-video-codec-openrm_*.deb" -o\
         -name "nvidia-l4t-multimedia_*.deb")"
       fi
       if [[ ! -z $debian_packages ]]; then

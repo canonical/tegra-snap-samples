@@ -17,6 +17,7 @@ plugs:
   vpi4-core24:
     interface: content
     target: $SNAP/vpi
+  network-bind:
   system-files:
     read:
       - /proc/driver/nvidia/gpus
@@ -79,6 +80,9 @@ parts:
       - python3.12-vpi4
       - python3-numpy
       - python3-pil
+      - nvidia-l4t-wayland
+      - libffi8
+      - nvidia-l4t-video-codec-openrm
     override-build: |
       mkdir -p /opt/nvidia/l4t-packages/
       touch /opt/nvidia/l4t-packages/.nv-l4t-disable-boot-fw-update-in-preinstall
@@ -137,6 +141,8 @@ apps:
       - bin/vpi-wrapper
     command: /opt/nvidia/vpi4/samples/01-convolve_2d/vpi_sample_01_convolve_2d
   vpi-sample-02-stereo-disparity:
+    environment:
+      LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/usr/lib/aarch64-linux-gnu/nvidia/:$SNAP/opt/nvidia/l4t-gpu-libs/openrm/
     command-chain:
       - bin/gpu-2404-wrapper
       - bin/vpi-wrapper

@@ -32,17 +32,36 @@ package-repositories:
     architectures: [arm64]
 
 parts:
-  tensorrt-libs:
+  cuda-libs:
     plugin: nil
-    build-packages:
-      - wget
-      - aptitude
     stage-packages:
       - cuda-13-2
-    override-stage: |
-      TENSORRT_VERSION=10.16.2.10-1+cuda13.2
-      aptitude install -y -o "Aptitude::ProblemResolver::Hints::=reject tensorrt :UNINST" tensorrt=$TENSORRT_VERSION
-      craftctl default
+
+  tensorrt-libs:
+    plugin: nil
+    stage-packages:
+      - tensorrt=10.16.2.10-1+cuda13.2
+      - libnvinfer10=10.16.2.10-1+cuda13.2
+      - libnvinfer-plugin10=10.16.2.10-1+cuda13.2
+      - libnvinfer-vc-plugin10=10.16.2.10-1+cuda13.2
+      - libnvinfer-lean10=10.16.2.10-1+cuda13.2
+      - libnvinfer-dispatch10=10.16.2.10-1+cuda13.2
+      - libnvonnxparsers10=10.16.2.10-1+cuda13.2
+      - libnvinfer-bin=10.16.2.10-1+cuda13.2
+      - libnvinfer-dev=10.16.2.10-1+cuda13.2
+      - libnvinfer-lean-dev=10.16.2.10-1+cuda13.2
+      - libnvinfer-plugin-dev=10.16.2.10-1+cuda13.2
+      - libnvinfer-vc-plugin-dev=10.16.2.10-1+cuda13.2
+      - libnvinfer-dispatch-dev=10.16.2.10-1+cuda13.2
+      - libnvonnxparsers-dev=10.16.2.10-1+cuda13.2
+      - python3-libnvinfer-dev=10.16.2.10-1+cuda13.2
+      - libnvinfer-headers-python-plugin-dev=10.16.2.10-1+cuda13.2
+      - libnvinfer-headers-dev=10.16.2.10-1+cuda13.2
+      - libnvinfer-safe-headers-dev=10.16.2.10-1+cuda13.2
+      - libnvinfer-headers-plugin-dev=10.16.2.10-1+cuda13.2
+      - python3-libnvinfer=10.16.2.10-1+cuda13.2
+      - python3-libnvinfer-lean=10.16.2.10-1+cuda13.2
+      - python3-libnvinfer-dispatch=10.16.2.10-1+cuda13.2
 
   scripts:
     plugin: dump

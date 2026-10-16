@@ -76,7 +76,6 @@ parts:
       cd build
       cmake .. \
           -DCMAKE_CUDA_COMPILER=/usr/local/cuda-13.2/bin/nvcc  \
-          -DCMAKE_BUILD_TYPE=Debug \
           -DTRT_LIB_DIR=/usr/lib/aarch64-linux-gnu \
           -DTRT_OUT_DIR=`pwd`/bin \
           -DBUILD_SAMPLES=ON \
