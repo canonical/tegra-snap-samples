@@ -39,6 +39,7 @@ plugs:
   tegra-camera-plug:
     interface: custom-device
     custom-device: tegra-camera
+  home:
   gpu-2404:
     interface: content
     target: $SNAP/gpu-2404
