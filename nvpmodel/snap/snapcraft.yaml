@@ -56,6 +56,7 @@ plugs:
       - /sys/kernel/debug/clk/pva0_vps
       - /sys/kernel/debug/clk/pva0_cpu_axi
       - /sys/kernel/nvpmodel_clk_cap/emc
+      - /sys/devices/platform/bwmgr/devfreq/bwmgr/max_freq
     read:
       - /sys/kernel/debug/bpmp/debug/clk/emc/min_rate
       - /sys/kernel/debug/bpmp/debug/clk/emc/rate
@@ -83,6 +84,7 @@ apps:
     before:
       - nvpmodel-service
     restart-condition: on-failure
+    restart-delay: 5s
     plugs:
       - set-power-management-mode
   nvpmodel-service:
@@ -92,6 +94,7 @@ apps:
     after:
       - nvpower-service
     restart-condition: on-failure
+    restart-delay: 5s
     plugs:
       - set-power-management-mode
   nvpmodel:
@@ -116,7 +119,7 @@ parts:
       L4T_DEB_PACKAGES_PATH=${L4T_DEB_PACKAGES_PATH:="NVIDIA_ARCHIVE"}
       if [ "$L4T_DEB_PACKAGES_PATH" = "NVIDIA_ARCHIVE" ]; then
         apt update
-        apt download nvidia-l4t-nvpmodel nvidia-l4t-core nvidia-l4t-tools nvidia-l4t-init
+        apt download {nvidia-l4t-nvpmodel,nvidia-l4t-core,nvidia-l4t-tools,nvidia-l4t-init}=39.2.0-20260601141651
         debian_packages=$(find . -name "nvidia-l4t*.deb")
       elif [ -d $L4T_DEB_PACKAGES_PATH ]; then
         debian_packages="$(find $L4T_DEB_PACKAGES_PATH\
