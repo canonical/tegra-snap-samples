@@ -59,14 +59,15 @@ parts:
     plugin: python
     source: .
     python-packages:
-      - autograd
+      - numpy==1.26.4
+      - autograd==1.9.1
   cudnn-samples:
     plugin: nil
     override-stage: |
       L4T_DEB_PACKAGES_PATH=${L4T_DEB_PACKAGES_PATH:="NVIDIA_ARCHIVE"}
       if [ "$L4T_DEB_PACKAGES_PATH" = "NVIDIA_ARCHIVE" ]; then
         apt update
-        apt download nvidia-l4t-core nvidia-l4t-cuda
+        apt download {nvidia-l4t-core,nvidia-l4t-cuda}=39.2.0-20260601141651
         debian_packages=$(find . -name "nvidia-l4t*.deb")
       elif [ -d $L4T_DEB_PACKAGES_PATH ]; then
         debian_packages="$(find $L4T_DEB_PACKAGES_PATH\
@@ -103,8 +104,6 @@ parts:
         -DcuDNN_LIBRARY_DIR=/usr/lib/aarch64-linux-gnu/ .
 
       cmake --build . -j$(nproc)
-
-
 
       sed -i 's#np\.shape(w)\[0\] / nheads#int(np\.shape(w)\[0\] / nheads)#g' $CRAFT_PART_INSTALL/usr/src/cudnn_samples_v9/multiHeadAttention/attn_ref.py
 
