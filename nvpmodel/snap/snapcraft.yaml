@@ -67,6 +67,9 @@ plugs:
       - /sys/kernel/debug/bpmp/debug/clk/emc/rate
       - /sys/kernel/debug/bpmp/debug/clk/emc/mrq_rate_locked
       - /sys/kernel/debug/bpmp/debug/clk/nafll_se/fmax_at_vmin
+  gpu-pg-mask:
+    interface: content
+    target: $SNAP_DATA/opt/nvidia/l4t-gpusetup
 
 slots:
   dbus-provider:
