@@ -97,7 +97,7 @@ parts:
         # nvidia-l4t-dla-compiler is not part of the private set of Nvidia packages,
         # that's why it is installed through the Nvidia archive.
         apt update
-        apt download {nvidia-l4t-dla-compiler}=$L4T_VERSION
+        apt download nvidia-l4t-dla-compiler=$L4T_VERSION
         debian_packages="$debian_packages"$'\n'"$(find . -name "nvidia-l4t-dla-compiler*.deb")"
       fi
       if [[ ! -z $debian_packages ]]; then

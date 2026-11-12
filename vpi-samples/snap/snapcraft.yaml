@@ -92,7 +92,7 @@ parts:
         apt update
         apt install --yes {nvidia-l4t-cuda,nvidia-l4t-pva,nvidia-l4t-3d-core,nvidia-l4t-multimedia,nvidia-l4t-multimedia-utils,nvidia-l4t-jetson-multimedia-api}=$L4T_VERSION
         # just needed for linking, doesn't matter if being built on Thor or not
-        apt install --yes {nvidia-l4t-cuda-openrm}=$L4T_VERSION
+        apt install --yes nvidia-l4t-cuda-openrm=$L4T_VERSION
       elif [ -d $L4T_DEB_PACKAGES_PATH ]; then
         apt install -y libegl1 nvme-cli efibootmgr bridge-utils libffi7 libasound2 libgles2 -f
         apt install -y alsa-topology-conf alsa-ucm-conf libasound2-data libdrm-amdgpu1 -f
