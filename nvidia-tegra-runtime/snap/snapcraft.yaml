@@ -48,29 +48,30 @@ parts:
     plugin: nil
     source: .
     override-stage: |
+      L4T_VERSION="39.2.0-20260601141651"
       L4T_DEB_PACKAGES_PATH=${L4T_DEB_PACKAGES_PATH:="NVIDIA_ARCHIVE"}
       if [ "$L4T_DEB_PACKAGES_PATH" = "NVIDIA_ARCHIVE" ]; then
         apt update
         apt download \
-          nvidia-l4t-3d-core \
-          nvidia-l4t-adaruntime \
-          nvidia-l4t-core \
-          nvidia-l4t-cuda \
-          nvidia-l4t-cuda-nvgpu \
-          nvidia-l4t-cuda-openrm \
-          nvidia-l4t-cuda-utils \
-          nvidia-l4t-firmware \
-          nvidia-l4t-firmware-nvgpu \
-          nvidia-l4t-firmware-openrm \
-          nvidia-l4t-gbm \
-          nvidia-l4t-graphics-demos \
-          nvidia-l4t-init \
-          nvidia-l4t-libvulkan \
-          nvidia-l4t-multimedia-utils \
-          nvidia-l4t-nvml \
-          nvidia-l4t-wayland \
-          nvidia-l4t-weston \
-          nvidia-l4t-x11
+          nvidia-l4t-3d-core=$L4T_VERSION \
+          nvidia-l4t-adaruntime=$L4T_VERSION \
+          nvidia-l4t-core=$L4T_VERSION \
+          nvidia-l4t-cuda=$L4T_VERSION \
+          nvidia-l4t-cuda-nvgpu=$L4T_VERSION \
+          nvidia-l4t-cuda-openrm=$L4T_VERSION \
+          nvidia-l4t-cuda-utils=$L4T_VERSION \
+          nvidia-l4t-firmware=$L4T_VERSION \
+          nvidia-l4t-firmware-nvgpu=$L4T_VERSION \
+          nvidia-l4t-firmware-openrm=$L4T_VERSION \
+          nvidia-l4t-gbm=$L4T_VERSION \
+          nvidia-l4t-graphics-demos=$L4T_VERSION \
+          nvidia-l4t-init=$L4T_VERSION \
+          nvidia-l4t-libvulkan=$L4T_VERSION \
+          nvidia-l4t-multimedia-utils=$L4T_VERSION \
+          nvidia-l4t-nvml=$L4T_VERSION \
+          nvidia-l4t-wayland=$L4T_VERSION \
+          nvidia-l4t-weston=$L4T_VERSION \
+          nvidia-l4t-x11=$L4T_VERSION
         debian_packages=$(find . -name "nvidia-l4t*.deb")
       elif [ -d $L4T_DEB_PACKAGES_PATH ]; then
         debian_packages="$(find $L4T_DEB_PACKAGES_PATH\
@@ -96,7 +97,7 @@ parts:
         # nvidia-l4t-dla-compiler is not part of the private set of Nvidia packages,
         # that's why it is installed through the Nvidia archive.
         apt update
-        apt download nvidia-l4t-dla-compiler
+        apt download {nvidia-l4t-dla-compiler}=$L4T_VERSION
         debian_packages="$debian_packages"$'\n'"$(find . -name "nvidia-l4t-dla-compiler*.deb")"
       fi
       if [[ ! -z $debian_packages ]]; then

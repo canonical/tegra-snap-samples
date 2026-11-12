@@ -80,18 +80,19 @@ parts:
       - python3.12-vpi4
       - python3-numpy
       - python3-pil
-      - nvidia-l4t-wayland
+      - nvidia-l4t-wayland=39.2.0-20260601141651
       - libffi8
-      - nvidia-l4t-video-codec-openrm
+      - nvidia-l4t-video-codec-openrm=39.2.0-20260601141651
     override-build: |
       mkdir -p /opt/nvidia/l4t-packages/
       touch /opt/nvidia/l4t-packages/.nv-l4t-disable-boot-fw-update-in-preinstall
+      L4T_VERSION="39.2.0-20260601141651"
       L4T_DEB_PACKAGES_PATH=${L4T_DEB_PACKAGES_PATH:="NVIDIA_ARCHIVE"}
       if [ "$L4T_DEB_PACKAGES_PATH" = "NVIDIA_ARCHIVE" ]; then
         apt update
-        apt install --yes nvidia-l4t-cuda nvidia-l4t-pva nvidia-l4t-3d-core nvidia-l4t-multimedia nvidia-l4t-multimedia-utils nvidia-l4t-jetson-multimedia-api
+        apt install --yes {nvidia-l4t-cuda,nvidia-l4t-pva,nvidia-l4t-3d-core,nvidia-l4t-multimedia,nvidia-l4t-multimedia-utils,nvidia-l4t-jetson-multimedia-api}=$L4T_VERSION
         # just needed for linking, doesn't matter if being built on Thor or not
-        apt install --yes nvidia-l4t-cuda-openrm
+        apt install --yes {nvidia-l4t-cuda-openrm}=$L4T_VERSION
       elif [ -d $L4T_DEB_PACKAGES_PATH ]; then
         apt install -y libegl1 nvme-cli efibootmgr bridge-utils libffi7 libasound2 libgles2 -f
         apt install -y alsa-topology-conf alsa-ucm-conf libasound2-data libdrm-amdgpu1 -f
