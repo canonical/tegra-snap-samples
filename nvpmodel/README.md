@@ -23,6 +23,7 @@ $ sudo snap connect nvpmodel:system-observe
 $ sudo snap connect nvpmodel:set-power-management-mode
 $ sudo snap connect nvpmodel:shutdown
 $ sudo snap connect nvpmodel:dbus-consumer nvpmodel:dbus-provider
+$ sudo snap connect nvpmodel:gpu-pg-mask tegra-kernel:gpu-pg-mask
 $ sudo snap restart nvpmodel
 ```
 

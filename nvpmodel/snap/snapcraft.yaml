@@ -47,6 +47,7 @@ plugs:
       - /sys/devices/platform/bus@0/c240000.i2c/i2c-1/1-0040/hwmon/hwmon3
       - /sys/devices/platform/bus@0/c240000.i2c/i2c-1/1-0041/hwmon/hwmon5
       - /sys/devices/platform/bus@0/c240000.i2c/i2c-1/1-0040/hwmon/hwmon4
+      - /sys/devices/platform/bus@0/c600000.i2c/i2c-2/2-0040/hwmon/hwmon5
       - /sys/devices/platform/bus@0/13e00000.host1x
       - /sys/kernel/debug/tegra-host1x/actmon
       - /sys/kernel/debug/clk/dla0_core
@@ -57,10 +58,18 @@ plugs:
       - /sys/kernel/debug/clk/pva0_cpu_axi
       - /sys/kernel/nvpmodel_clk_cap/emc
       - /sys/devices/platform/bwmgr/devfreq/bwmgr/max_freq
+      - /sys/devices/platform/bus@0/d0b0000000.pcie/pci0000:00/0000:00:00.0/0000:01:00.0
+      - /sys/devices/platform/bus@0/8181200000.host1x/818c000000.pva0/clk_cap
+      - /sys/kernel/debug/bpmp/debug/clk/se_root/rate
+      - /sys/kernel/debug/bpmp/debug/clk/se_root/mrq_rate_locked
     read:
       - /sys/kernel/debug/bpmp/debug/clk/emc/min_rate
       - /sys/kernel/debug/bpmp/debug/clk/emc/rate
       - /sys/kernel/debug/bpmp/debug/clk/emc/mrq_rate_locked
+      - /sys/kernel/debug/bpmp/debug/clk/nafll_se/fmax_at_vmin
+  gpu-pg-mask:
+    interface: content
+    target: $SNAP_DATA/opt/nvidia/l4t-gpusetup
 
 slots:
   dbus-provider:
@@ -75,6 +84,8 @@ layout:
     bind: $SNAP_DATA/var/lib/nvpmodel
   /usr/sbin/nvpmodel:
     symlink: $SNAP/usr/sbin/nvpmodel
+  /opt/nvidia/l4t-gpusetup:
+    bind: $SNAP_DATA/opt/nvidia/l4t-gpusetup
 
 apps:
   nvpower-service:
